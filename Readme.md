@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Виктор Сагидулин](https://up.htmlacademy.ru/javascript/10/user/103706).
-* Наставник: `Юрий Нехаевский`.
+* Наставник: `Юрий Нехаевский`(https://up.htmlacademy.ru/javascript/10/user/116612).
 
 ---
 
