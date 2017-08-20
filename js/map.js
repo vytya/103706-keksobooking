@@ -5,7 +5,9 @@ var getRandomNumber = function (min, max) {
 };
 
 var addZeroField = function (number) {
-  return number = (number < 10) ? '0' + number : number;
+  number = (number < 10) ? '0' + number : number;
+
+  return number;
 };
 
 var getShuffledArray = function (array) {
@@ -141,15 +143,10 @@ var getPropertyType = function (type) {
   switch (type) {
     case 'flat':
       return 'Квартира';
-      break;
-
     case 'bungalo':
       return 'Бунгало';
-      break;
-
     case 'house':
       return 'Дом';
-      break;
   }
 };
 
@@ -185,4 +182,4 @@ var renderDialogData = function (data) {
   return clonedDialogPanelTemplate;
 };
 
-  dialogPanelParent.appendChild(renderDialogData(nearbyProperty[0]));
+dialogPanelParent.appendChild(renderDialogData(nearbyProperty[0]));
