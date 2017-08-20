@@ -142,9 +142,11 @@ var getPropertyType = function (type) {
     case 'flat':
       return 'Квартира';
       break;
+
     case 'bungalo':
       return 'Бунгало';
       break;
+
     case 'house':
       return 'Дом';
       break;
