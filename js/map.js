@@ -140,14 +140,21 @@ pinsBlock.appendChild(fragment);
 
 // Display dialog panel
 var getPropertyType = function (type) {
+  var returnType = '';
+
   switch (type) {
     case 'flat':
-      return 'Квартира';
+      returnType = 'Квартира';
+      break;
     case 'bungalo':
-      return 'Бунгало';
+      returnType = 'Бунгало';
+      break;
     case 'house':
-      return 'Дом';
+      returnType = 'Дом';
+      break;
   }
+
+  return returnType;
 };
 
 var getFeatures = function (array) {
