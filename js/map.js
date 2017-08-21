@@ -1,24 +1,28 @@
 'use strict';
 
 var getRandomNumber = function (min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
+  return Math.floor(min + Math.random() * (max + 1 - min));
 };
 
 var addZeroField = function (number) {
-  number = (number < 10) ? '0' + number : number;
-
-  return number;
+  return (number < 10) ? '0' + number : number;
 };
 
 var getShuffledArray = function (array) {
   var temporaryValue;
   var randomIndex;
+  var currentIndex = array.length;
 
-  for (var i = 0; i < array.length; i++) {
-    randomIndex = Math.floor(Math.random() * i);
+  if (array.length < 2) {
+    return array;
+  }
 
-    temporaryValue = array[i];
-    array[i] = array[randomIndex];
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
     array[randomIndex] = temporaryValue;
   }
 
@@ -31,7 +35,7 @@ var getRandomArrayElement = function (array) {
   return array[randomIndex];
 };
 
-var NAMESOFPROPERTIES = [
+var NAMES_OF_PROPERTIES = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
   'Огромный прекрасный дворец',
@@ -48,13 +52,13 @@ var TYPES = [
   'bungalo'
 ];
 
-var CHECKINOUTHOURS = [
+var CHECK_IN_OUT_HOURS = [
   '12:00',
   '13:00',
   '14:00'
 ];
 
-var FEATURESLIST = [
+var FEATURES_LIST = [
   'wifi',
   'dishwasher',
   'parking',
@@ -64,36 +68,36 @@ var FEATURESLIST = [
 ];
 
 // Make random data
-var shuffledNameOfProperties = getShuffledArray(NAMESOFPROPERTIES);
+var shuffledNameOfProperties = getShuffledArray(NAMES_OF_PROPERTIES);
 var nearbyProperty = [];
 var photos = [];
 var i;
 
 for (i = 0; i < 8; i++) {
-  var featuresListString = getShuffledArray(FEATURESLIST).slice(0, getRandomNumber(1, FEATURESLIST.length));
+  var featuresListString = getShuffledArray(FEATURES_LIST).slice(0, getRandomNumber(1, FEATURES_LIST.length));
   var locationX = getRandomNumber(300, 900);
   var locationY = getRandomNumber(100, 500);
 
   nearbyProperty[i] = {
-    'author': {
-      'avatar': 'img/avatars/user' + addZeroField(i + 1) + '.png',
+    author: {
+      avatar: 'img/avatars/user' + addZeroField(i + 1) + '.png',
     },
-    'offer': {
-      'title': shuffledNameOfProperties[i],
-      'address': locationX + ', ' + locationY,
-      'price': getRandomNumber(1000, 1000000),
-      'type': getRandomArrayElement(TYPES),
-      'rooms': getRandomNumber(1, 5),
-      'guests': getRandomNumber(1, 100),
-      'checkin': getRandomArrayElement(CHECKINOUTHOURS),
-      'checkout': getRandomArrayElement(CHECKINOUTHOURS),
-      'features': featuresListString,
-      'description': '',
-      'photos': photos
+    offer: {
+      title: shuffledNameOfProperties[i],
+      address: locationX + ', ' + locationY,
+      price: getRandomNumber(1000, 1000000),
+      type: getRandomArrayElement(TYPES),
+      rooms: getRandomNumber(1, 5),
+      guests: getRandomNumber(1, 100),
+      checkin: getRandomArrayElement(CHECK_IN_OUT_HOURS),
+      checkout: getRandomArrayElement(CHECK_IN_OUT_HOURS),
+      features: featuresListString,
+      description: '',
+      photos: photos
     },
-    'location': {
-      'x': locationX,
-      'y': locationY
+    location: {
+      x: locationX,
+      y: locationY
     }
   };
 }
