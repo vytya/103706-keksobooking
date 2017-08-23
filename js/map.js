@@ -1,40 +1,5 @@
 'use strict';
 
-var getRandomNumber = function (min, max) {
-  return Math.floor(min + Math.random() * (max + 1 - min));
-};
-
-var addZeroField = function (number) {
-  return (number < 10) ? '0' + number : number;
-};
-
-var getShuffledArray = function (array) {
-  var temporaryValue;
-  var randomIndex;
-  var currentIndex = array.length;
-
-  if (array.length < 2) {
-    return array;
-  }
-
-  while (currentIndex !== 0) {
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
-  }
-
-  return array;
-};
-
-var getRandomArrayElement = function (array) {
-  var randomIndex = Math.floor(Math.random() * array.length);
-
-  return array[randomIndex];
-};
-
 var NAMES_OF_PROPERTIES = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
@@ -67,18 +32,46 @@ var FEATURES_LIST = [
   'conditioner'
 ];
 
+var PINS_NUMBER = 8;
+
+var getRandomNumber = function (min, max) {
+  return Math.floor(min + Math.random() * (max + 1 - min));
+};
+
+var addZeroField = function (number) {
+  return (number < 10) ? '0' + number : number;
+};
+
+var compareRandom = function () {
+  return Math.random() - 0.5;
+};
+
+var getShuffledArray = function (array) {
+  if (array.length < 2) {
+    return array;
+  }
+
+  return array.sort(compareRandom);
+};
+
+var getRandomArrayElement = function (array) {
+  var randomIndex = Math.floor(Math.random() * array.length);
+
+  return array[randomIndex];
+};
+
 // Make random data
 var shuffledNameOfProperties = getShuffledArray(NAMES_OF_PROPERTIES);
-var nearbyProperty = [];
+var nearbyPropertyData = [];
 var photos = [];
 var i;
 
-for (i = 0; i < 8; i++) {
+for (i = 0; i < PINS_NUMBER; i++) {
   var featuresListString = getShuffledArray(FEATURES_LIST).slice(0, getRandomNumber(1, FEATURES_LIST.length));
   var locationX = getRandomNumber(300, 900);
   var locationY = getRandomNumber(100, 500);
 
-  nearbyProperty[i] = {
+  nearbyPropertyData[i] = {
     author: {
       avatar: 'img/avatars/user' + addZeroField(i + 1) + '.png',
     },
@@ -136,8 +129,8 @@ var renderPin = function (data) {
   return clonedPinTemplate;
 };
 
-for (i = 0; i < nearbyProperty.length; i++) {
-  fragment.appendChild(renderPin(nearbyProperty[i]));
+for (i = 0; i < nearbyPropertyData.length; i++) {
+  fragment.appendChild(renderPin(nearbyPropertyData[i]));
 }
 
 pinsBlock.appendChild(fragment);
@@ -174,9 +167,9 @@ var getFeatures = function (array) {
 var dialogPanelParent = document.querySelector('#offer-dialog');
 var dialogPanelTemplate = document.querySelector('#lodge-template').content;
 
-dialogPanelParent.querySelector('.dialog__panel').remove();
-
 var renderDialogData = function (data) {
+  dialogPanelParent.querySelector('.dialog__panel').remove();
+
   var clonedDialogPanelTemplate = dialogPanelTemplate.cloneNode(true);
 
   fillData(clonedDialogPanelTemplate, '.lodge__title', 'html', data.offer.title);
@@ -193,4 +186,33 @@ var renderDialogData = function (data) {
   return clonedDialogPanelTemplate;
 };
 
-dialogPanelParent.appendChild(renderDialogData(nearbyProperty[0]));
+dialogPanelParent.appendChild(renderDialogData(nearbyPropertyData[0]));
+
+// Pins events
+var pinsList = document.querySelectorAll('.pin');
+
+var onPinClick = function () {
+  if (this.classList.contains('pin__main')) {
+    return;
+  }
+
+  var activePin;
+
+  for (i = 0; i < pinsList.length; i++) {
+    pinsList[i].classList.remove('pin--active');
+
+    if (this == pinsList[i]) {
+      activePin = i;
+    }
+  }
+
+  dialogPanelParent.appendChild(renderDialogData(nearbyPropertyData[activePin - 1]));
+
+  this.classList.add('pin--active');
+};
+
+for (i = 0; i < pinsList.length; i++) {
+  if (!pinsList[i].classList.contains('pin__main')) {
+    pinsList[i].addEventListener('click', onPinClick);
+  }
+}
