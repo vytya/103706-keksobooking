@@ -32,6 +32,11 @@ var FEATURES_LIST = [
   'conditioner'
 ];
 
+var KEY_CODES = {
+  escape: 27,
+  enter: 13
+};
+
 var PINS_NUMBER = 8;
 
 var getRandomNumber = function (min, max) {
@@ -73,7 +78,7 @@ for (i = 0; i < PINS_NUMBER; i++) {
 
   nearbyPropertyData[i] = {
     author: {
-      avatar: 'img/avatars/user' + addZeroField(i + 1) + '.png',
+      avatar: 'img/avatars/user' + addZeroField(i + 1) + '.png'
     },
     offer: {
       title: shuffledNameOfProperties[i],
@@ -190,29 +195,64 @@ dialogPanelParent.appendChild(renderDialogData(nearbyPropertyData[0]));
 
 // Pins events
 var pinsList = document.querySelectorAll('.pin');
+var closeDialog = document.querySelector('.dialog__close');
 
-var onPinClick = function () {
-  if (this.classList.contains('pin__main')) {
-    return;
-  }
-
+// Activate clicked pin & load active info to dialog window
+var activatePinAndOpenDialog = function (pin) {
   var activePin;
+
+  if (dialogPanelParent.classList.contains('hidden')) {
+    dialogPanelParent.classList.remove('hidden');
+  }
 
   for (i = 0; i < pinsList.length; i++) {
     pinsList[i].classList.remove('pin--active');
 
-    if (this == pinsList[i]) {
+    if (pin === pinsList[i]) {
       activePin = i;
     }
   }
 
   dialogPanelParent.appendChild(renderDialogData(nearbyPropertyData[activePin - 1]));
 
-  this.classList.add('pin--active');
+  pin.classList.add('pin--active');
 };
 
+// Close dialog and remove active pin class
+var closePinAndHideDialog = function () {
+  dialogPanelParent.classList.add('hidden');
+
+  for (i = 0; i < pinsList.length; i++) {
+    pinsList[i].classList.remove('pin--active');
+  }
+};
+
+var onPinEvent = function (event) {
+  if ((event.type === 'keydown' && event.keyCode === KEY_CODES.enter) || (event.type === 'click')) {
+    activatePinAndOpenDialog(this);
+  }
+};
+
+var onCloseEvent = function (event) {
+  if ((event.type === 'keydown' && event.keyCode === KEY_CODES.enter) || (event.type === 'click')) {
+    closePinAndHideDialog();
+  }
+};
+
+var onCloseGlobalEvent = function (event) {
+  if (event.keyCode === KEY_CODES.escape) {
+    closePinAndHideDialog();
+  }
+};
+
+// Add events listeners at all pins
 for (i = 0; i < pinsList.length; i++) {
   if (!pinsList[i].classList.contains('pin__main')) {
-    pinsList[i].addEventListener('click', onPinClick);
+    pinsList[i].addEventListener('click', onPinEvent);
+    pinsList[i].addEventListener('keydown', onPinEvent);
   }
 }
+
+closeDialog.addEventListener('click', onCloseEvent);
+closeDialog.addEventListener('keydown', onCloseEvent);
+document.addEventListener('keydown', onCloseGlobalEvent);
