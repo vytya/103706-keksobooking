@@ -228,13 +228,13 @@ var closePinAndHideDialog = function () {
 };
 
 var onPinEvent = function (event) {
-  if ((event.type === 'keydown' && event.keyCode === KEY_CODES.enter) || (event.type === 'click')) {
+  if (event.keyCode === KEY_CODES.enter || event.type === 'click') {
     activatePinAndOpenDialog(this);
   }
 };
 
 var onCloseEvent = function (event) {
-  if ((event.type === 'keydown' && event.keyCode === KEY_CODES.enter) || (event.type === 'click')) {
+  if (event.keyCode === KEY_CODES.enter || event.type === 'click') {
     closePinAndHideDialog();
   }
 };
