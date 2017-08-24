@@ -206,11 +206,11 @@ var activatePinAndOpenDialog = function (pin) {
   }
 
   for (i = 0; i < pinsList.length; i++) {
-    pinsList[i].classList.remove('pin--active');
-
     if (pin === pinsList[i]) {
       activePin = i;
     }
+
+    pinsList[i].classList.remove('pin--active');
   }
 
   dialogPanelParent.appendChild(renderDialogData(nearbyPropertyData[activePin - 1]));
@@ -229,7 +229,7 @@ var closePinAndHideDialog = function () {
 
 var onPinEvent = function (event) {
   if (event.keyCode === KEY_CODES.enter || event.type === 'click') {
-    activatePinAndOpenDialog(this);
+    activatePinAndOpenDialog(event.currentTarget);
   }
 };
 
