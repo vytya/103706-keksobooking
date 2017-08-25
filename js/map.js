@@ -251,7 +251,11 @@ closeDialog.addEventListener('click', onCloseEvent);
 document.addEventListener('keydown', onCloseGlobalEvent);
 
 // Form validations
+var titleInput = document.querySelector('#title');
+var priceInput = document.querySelector('#price');
+
 var checkMaxMinInputLenght = function (input) {
+
   if (!input.validity.valid) {
     input.style.boxShadow = ERROR_BOX_SHADOW;
 
@@ -277,8 +281,6 @@ var checkMaxMinInputLenght = function (input) {
   }
 };
 
-var titleInput = document.querySelector('#title');
-var priceInput = document.querySelector('#price');
 
 titleInput.addEventListener('invalid', function () {
   checkMaxMinInputLenght(titleInput);
@@ -292,8 +294,10 @@ priceInput.addEventListener('invalid', function () {
 var timeinSelect = document.querySelector('#timein');
 var timeOutSelect = document.querySelector('#timeout');
 var typeSelect = document.querySelector('#type');
+var roomNumberSelect = document.querySelector('#room_number');
+var capacitySelect = document.querySelector('#capacity');
 
-var getSelectedOptionIndex = function (event, selectInput) {
+var getSelectedOptionIndex = function (event) {
   var selectOptions = event.originalTarget;
   var selectedOption;
 
@@ -306,27 +310,30 @@ var getSelectedOptionIndex = function (event, selectInput) {
   return selectedOption;
 };
 
-var changeOptionInSelect = function (event, masterSelect, slaveSelect) {
-  var selectedOption = getSelectedOptionIndex(event, masterSelect);
-
-  slaveSelect[selectedOption].selected = true;
+var getSelectedOptionValue = function (select, selectedOptionIndex) {
+  return select[selectedOptionIndex].value;
 };
 
-var changeMinPrice = function (event, masterSelect) {
-  var selectedOption = getSelectedOptionIndex(event, masterSelect);
+var getSelectedOptionText = function (select, selectedOptionIndex) {
+  return select[selectedOptionIndex].text;
+};
+
+var changeMinPrice = function (event, select) {
+  var selectedOptionIndex = getSelectedOptionIndex(event);
+  var selectedOptionText = getSelectedOptionText(select, selectedOptionIndex);
   var minPrice;
 
-  switch (selectedOption) {
-    case 0:
+  switch (selectedOptionText) {
+    case 'Лачуга':
       minPrice = 0;
       break;
-    case 1:
+    case 'Квартира':
       minPrice = 1000;
       break;
-    case 2:
+    case 'Дом':
       minPrice = 5000;
       break;
-    case 3:
+    case 'Дворец':
       minPrice = 10000;
       break;
   }
@@ -334,15 +341,66 @@ var changeMinPrice = function (event, masterSelect) {
   priceInput.setAttribute('min', minPrice);
 };
 
+var changeOptionInSelect = function (event, slaveSelect) {
+  var selectedOption = getSelectedOptionIndex(event);
+
+  slaveSelect[selectedOption].selected = true;
+};
+
 timeinSelect.addEventListener('change', function (event) {
-  changeOptionInSelect(event, timeinSelect, timeOutSelect);
+  changeOptionInSelect(event, timeOutSelect);
 });
 
 timeOutSelect.addEventListener('change', function (event) {
-  changeOptionInSelect(event, timeOutSelect, timeinSelect);
+  changeOptionInSelect(event, timeinSelect);
 });
 
 typeSelect.addEventListener('change', function (event) {
   changeMinPrice(event, typeSelect);
 });
+
+var changeAnother = function (event, master, slave) {
+  var selectedOptionIndex = getSelectedOptionIndex(event);
+  var selectedOptionValue = getSelectedOptionValue(master, selectedOptionIndex);
+  var slaveIndex;
+
+  if (event.target.id === 'room_number') {
+    switch (selectedOptionValue) {
+      case '1':
+        slaveIndex = 3;
+        break;
+      case '2':
+        slaveIndex = 0;
+        break;
+      case '100':
+        slaveIndex = 0;
+        break;
+      default:
+        slaveIndex = 0;
+    }
+  } else if (event.target.id === 'capacity') {
+    switch (selectedOptionValue) {
+      case '3':
+        slaveIndex = 1;
+        break;
+      case '0':
+        slaveIndex = 0;
+        break;
+      default:
+        slaveIndex = 0;
+    }
+  }
+
+  console.log(selectedOptionValue);
+  slave[slaveIndex].selected = true;
+};
+
+roomNumberSelect.addEventListener('change', function (event) {
+  changeAnother(event, roomNumberSelect, capacitySelect);
+});
+
+capacitySelect.addEventListener('change', function (event) {
+  changeAnother(event, capacitySelect, roomNumberSelect);
+});
+
 
