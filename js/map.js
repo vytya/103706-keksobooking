@@ -47,16 +47,12 @@ var addZeroField = function (number) {
   return (number < 10) ? '0' + number : number;
 };
 
-var compareRandom = function () {
-  return Math.random() - 0.5;
-};
-
 var getShuffledArray = function (array) {
-  if (array.length < 2) {
-    return array;
-  }
+  array.sort(function (a, b) {
+    return Math.random() - 0.5;
+  });
 
-  return array.sort(compareRandom);
+  return array;
 };
 
 var getRandomArrayElement = function (array) {
@@ -191,15 +187,13 @@ var renderDialogData = function (data) {
   return clonedDialogPanelTemplate;
 };
 
-dialogPanelParent.appendChild(renderDialogData(nearbyPropertyData[0]));
-
 // Pins events
-var pinsList = document.querySelectorAll('.pin');
+var pinsList = document.querySelectorAll('.pin:not(.pin__main)');
 var closeDialog = document.querySelector('.dialog__close');
 
 // Activate clicked pin & load active info to dialog window
 var activatePinAndOpenDialog = function (pin) {
-  var activePin;
+  var activePinIndex;
 
   if (dialogPanelParent.classList.contains('hidden')) {
     dialogPanelParent.classList.remove('hidden');
@@ -207,13 +201,13 @@ var activatePinAndOpenDialog = function (pin) {
 
   for (i = 0; i < pinsList.length; i++) {
     if (pin === pinsList[i]) {
-      activePin = i;
+      activePinIndex = i;
     }
 
     pinsList[i].classList.remove('pin--active');
   }
 
-  dialogPanelParent.appendChild(renderDialogData(nearbyPropertyData[activePin - 1]));
+  dialogPanelParent.appendChild(renderDialogData(nearbyPropertyData[activePinIndex]));
 
   pin.classList.add('pin--active');
 };
@@ -247,12 +241,9 @@ var onCloseGlobalEvent = function (event) {
 
 // Add events listeners at all pins
 for (i = 0; i < pinsList.length; i++) {
-  if (!pinsList[i].classList.contains('pin__main')) {
-    pinsList[i].addEventListener('click', onPinEvent);
-    pinsList[i].addEventListener('keydown', onPinEvent);
-  }
+  pinsList[i].addEventListener('click', onPinEvent);
+  pinsList[i].addEventListener('keydown', onPinEvent);
 }
 
 closeDialog.addEventListener('click', onCloseEvent);
-closeDialog.addEventListener('keydown', onCloseEvent);
 document.addEventListener('keydown', onCloseGlobalEvent);
