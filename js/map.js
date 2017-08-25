@@ -258,26 +258,27 @@ var checkMaxMinInputLenght = function (input) {
 
   if (!input.validity.valid) {
     input.style.boxShadow = ERROR_BOX_SHADOW;
+  } else {
+    input.style.boxShadow = '';
+  }
 
-    if (input.validity.tooShort) {
-      var minLength = input.minLength;
+  if (input.validity.tooShort) {
+    var minLength = input.minLength;
 
-      input.setCustomValidity('Название должно состоять минимум из ' + minLength + ' символов');
-    } else if (input.validity.tooLong) {
-      var maxLength = input.maxLength;
+    input.setCustomValidity('Название должно состоять минимум из ' + minLength + ' символов');
+  } else if (input.validity.tooLong) {
+    var maxLength = input.maxLength;
 
-      input.setCustomValidity('Название не должно превышать ' + maxLength + ' символов');
-    } else if (input.validity.rangeUnderflow) {
-      var min = input.min;
-      var max = input.max;
+    input.setCustomValidity('Название не должно превышать ' + maxLength + ' символов');
+  } else if (input.validity.rangeUnderflow) {
+    var min = input.min;
+    var max = input.max;
 
-      input.setCustomValidity('Число должно быть больше ' + min + ' и меньше ' + max);
-    } else if (input.validity.valueMissing) {
-      input.setCustomValidity('Обязательное поле');
-    }
+    input.setCustomValidity('Число должно быть больше ' + min + ' и меньше ' + max);
+  } else if (input.validity.valueMissing) {
+    input.setCustomValidity('Обязательное поле');
   } else {
     input.setCustomValidity('');
-    input.style.boxShadow = '';
   }
 };
 
@@ -290,11 +291,13 @@ priceInput.addEventListener('invalid', function () {
 });
 
 // Form depends & relations
-var timeinSelect = document.querySelector('#timein');
+var noticeForm = document.querySelector('.notice__form');
+var timeInSelect = document.querySelector('#timein');
 var timeOutSelect = document.querySelector('#timeout');
 var typeSelect = document.querySelector('#type');
 var roomNumberSelect = document.querySelector('#room_number');
 var capacitySelect = document.querySelector('#capacity');
+var submitButton = document.querySelector('.form__submit');
 
 var getSelectedOptionIndex = function (event) {
   var selectOptions = event.originalTarget;
@@ -346,12 +349,12 @@ var changeOptionInSelect = function (event, slaveSelect) {
   slaveSelect[selectedOption].selected = true;
 };
 
-timeinSelect.addEventListener('change', function (event) {
+timeInSelect.addEventListener('change', function (event) {
   changeOptionInSelect(event, timeOutSelect);
 });
 
 timeOutSelect.addEventListener('change', function (event) {
-  changeOptionInSelect(event, timeinSelect);
+  changeOptionInSelect(event, timeInSelect);
 });
 
 typeSelect.addEventListener('change', function (event) {
@@ -399,6 +402,21 @@ roomNumberSelect.addEventListener('change', function (event) {
 
 capacitySelect.addEventListener('change', function (event) {
   changeAnother(event, capacitySelect, roomNumberSelect);
+});
+
+submitButton.addEventListener('click', function () {
+  var requiredInputs = noticeForm.querySelectorAll('input[required]');
+  var succefullState = true;
+
+  for (i = 0; i < requiredInputs.length; i++) {
+    if (!requiredInputs[i].validity.valid) {
+      succefullState = false;
+    }
+  }
+
+  if (succefullState) {
+    noticeForm.submit();
+  }
 });
 
 
