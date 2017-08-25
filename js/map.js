@@ -417,6 +417,6 @@ submitButton.addEventListener('click', function () {
   if (succefullState) {
     noticeForm.submit();
   }
-}); 
+});
 
 
