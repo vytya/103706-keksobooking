@@ -48,7 +48,7 @@ var addZeroField = function (number) {
 };
 
 var getShuffledArray = function (array) {
-  array.sort(function (a, b) {
+  array.sort(function () {
     return Math.random() - 0.5;
   });
 
