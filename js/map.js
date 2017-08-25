@@ -281,7 +281,6 @@ var checkMaxMinInputLenght = function (input) {
   }
 };
 
-
 titleInput.addEventListener('invalid', function () {
   checkMaxMinInputLenght(titleInput);
 });
@@ -391,7 +390,6 @@ var changeAnother = function (event, master, slave) {
     }
   }
 
-  console.log(selectedOptionValue);
   slave[slaveIndex].selected = true;
 };
 
