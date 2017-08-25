@@ -247,3 +247,39 @@ for (i = 0; i < pinsList.length; i++) {
 
 closeDialog.addEventListener('click', onCloseEvent);
 document.addEventListener('keydown', onCloseGlobalEvent);
+
+// Form validations
+var checkMaxMinInputLenght = function (input) {
+  console.log(input);
+  if (!input.validity.valid) {
+    if (input.validity.tooShort) {
+      var minLength = input.minLength;
+
+      input.setCustomValidity('Название должно состоять минимум из ' + minLength + ' символов');
+    } else if (input.validity.tooLong) {
+      var maxLength = input.maxLength;
+
+      input.setCustomValidity('Название не должно превышать ' + maxLength + ' символов');
+    } else if (input.validity.rangeUnderflow) {
+      var min = input.min;
+      var max = input.max;
+
+      input.setCustomValidity('Число должно быть больше ' + min + ' и меньше ' + max);
+    } else if (input.validity.valueMissing) {
+      input.setCustomValidity('Обязательное поле');
+    } else {
+      input.setCustomValidity('');
+    }
+  }
+};
+
+var titleInput = document.querySelector('#title');
+var priceInput = document.querySelector('#price');
+
+titleInput.addEventListener('invalid', function (event) {
+  checkMaxMinInputLenght(titleInput);
+});
+
+priceInput.addEventListener('invalid', function (event) {
+  checkMaxMinInputLenght(priceInput);
+});
