@@ -39,6 +39,8 @@ var KEY_CODES = {
 
 var PINS_NUMBER = 8;
 
+var ERROR_BOX_SHADOW = 'inset 0 0 0 2px red';
+
 var getRandomNumber = function (min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
 };
@@ -250,8 +252,9 @@ document.addEventListener('keydown', onCloseGlobalEvent);
 
 // Form validations
 var checkMaxMinInputLenght = function (input) {
-  console.log(input);
   if (!input.validity.valid) {
+    input.style.boxShadow = ERROR_BOX_SHADOW;
+
     if (input.validity.tooShort) {
       var minLength = input.minLength;
 
@@ -267,19 +270,79 @@ var checkMaxMinInputLenght = function (input) {
       input.setCustomValidity('Число должно быть больше ' + min + ' и меньше ' + max);
     } else if (input.validity.valueMissing) {
       input.setCustomValidity('Обязательное поле');
-    } else {
-      input.setCustomValidity('');
     }
+  } else {
+    input.setCustomValidity('');
+    input.style.boxShadow = '';
   }
 };
 
 var titleInput = document.querySelector('#title');
 var priceInput = document.querySelector('#price');
 
-titleInput.addEventListener('invalid', function (event) {
+titleInput.addEventListener('invalid', function () {
   checkMaxMinInputLenght(titleInput);
 });
 
-priceInput.addEventListener('invalid', function (event) {
+priceInput.addEventListener('invalid', function () {
   checkMaxMinInputLenght(priceInput);
 });
+
+// Form depends & relations
+var timeinSelect = document.querySelector('#timein');
+var timeOutSelect = document.querySelector('#timeout');
+var typeSelect = document.querySelector('#type');
+
+var getSelectedOptionIndex = function (event, selectInput) {
+  var selectOptions = event.originalTarget;
+  var selectedOption;
+
+  for (i = 0; i < selectOptions.length; i++) {
+    if (selectOptions[i].selected === true) {
+      selectedOption = i;
+    }
+  }
+
+  return selectedOption;
+};
+
+var changeOptionInSelect = function (event, masterSelect, slaveSelect) {
+  var selectedOption = getSelectedOptionIndex(event, masterSelect);
+
+  slaveSelect[selectedOption].selected = true;
+};
+
+var changeMinPrice = function (event, masterSelect) {
+  var selectedOption = getSelectedOptionIndex(event, masterSelect);
+  var minPrice;
+
+  switch (selectedOption) {
+    case 0:
+      minPrice = 0;
+      break;
+    case 1:
+      minPrice = 1000;
+      break;
+    case 2:
+      minPrice = 5000;
+      break;
+    case 3:
+      minPrice = 10000;
+      break;
+  }
+
+  priceInput.setAttribute('min', minPrice);
+};
+
+timeinSelect.addEventListener('change', function (event) {
+  changeOptionInSelect(event, timeinSelect, timeOutSelect);
+});
+
+timeOutSelect.addEventListener('change', function (event) {
+  changeOptionInSelect(event, timeOutSelect, timeinSelect);
+});
+
+typeSelect.addEventListener('change', function (event) {
+  changeMinPrice(event, typeSelect);
+});
+
