@@ -263,7 +263,6 @@ var capacitySelect = document.querySelector('#capacity');
 var submitButton = document.querySelector('.form__submit');
 
 var getSelectedOptionIndex = function (event) {
-  console.log(event);
   var selectOptions = event.target;
   var selectedOption;
 
