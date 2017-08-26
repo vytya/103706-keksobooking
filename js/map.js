@@ -251,44 +251,7 @@ closeDialog.addEventListener('click', onCloseEvent);
 document.addEventListener('keydown', onCloseGlobalEvent);
 
 // Form validations
-var titleInput = document.querySelector('#title');
 var priceInput = document.querySelector('#price');
-
-var checkMaxMinInputLenght = function (input) {
-
-  if (!input.validity.valid) {
-    input.style.boxShadow = ERROR_BOX_SHADOW;
-  } else {
-    input.style.boxShadow = '';
-  }
-
-  if (input.validity.tooShort) {
-    var minLength = input.minLength;
-
-    input.setCustomValidity('Название должно состоять минимум из ' + minLength + ' символов');
-  } else if (input.validity.tooLong) {
-    var maxLength = input.maxLength;
-
-    input.setCustomValidity('Название не должно превышать ' + maxLength + ' символов');
-  } else if (input.validity.rangeUnderflow) {
-    var min = input.min;
-    var max = input.max;
-
-    input.setCustomValidity('Число должно быть больше ' + min + ' и меньше ' + max);
-  } else if (input.validity.valueMissing) {
-    input.setCustomValidity('Обязательное поле');
-  } else {
-    input.setCustomValidity('');
-  }
-};
-
-titleInput.addEventListener('invalid', function () {
-  checkMaxMinInputLenght(titleInput);
-});
-
-priceInput.addEventListener('invalid', function () {
-  checkMaxMinInputLenght(priceInput);
-});
 
 // Form depends & relations
 var noticeForm = document.querySelector('.notice__form');
@@ -300,7 +263,8 @@ var capacitySelect = document.querySelector('#capacity');
 var submitButton = document.querySelector('.form__submit');
 
 var getSelectedOptionIndex = function (event) {
-  var selectOptions = event.originalTarget;
+  console.log(event);
+  var selectOptions = event.target;
   var selectedOption;
 
   for (i = 0; i < selectOptions.length; i++) {
@@ -369,27 +333,32 @@ var changeAnother = function (event, master, slave) {
   if (event.target.id === 'room_number') {
     switch (selectedOptionValue) {
       case '1':
-        slaveIndex = 3;
+        slaveIndex = 2;
         break;
       case '2':
+        slaveIndex = 1;
+        break;
+      case '3':
         slaveIndex = 0;
         break;
       case '100':
-        slaveIndex = 0;
+        slaveIndex = 3;
         break;
-      default:
-        slaveIndex = 0;
     }
   } else if (event.target.id === 'capacity') {
     switch (selectedOptionValue) {
       case '3':
+        slaveIndex = 2;
+        break;
+      case '2':
         slaveIndex = 1;
         break;
-      case '0':
+      case '1':
         slaveIndex = 0;
         break;
-      default:
-        slaveIndex = 0;
+      case '0':
+        slaveIndex = 3;
+        break;
     }
   }
 
@@ -409,12 +378,17 @@ submitButton.addEventListener('click', function () {
   var succefullState = true;
 
   for (i = 0; i < requiredInputs.length; i++) {
+    requiredInputs[i].style.boxShadow = '';
+
     if (!requiredInputs[i].validity.valid) {
+      requiredInputs[i].style.boxShadow = ERROR_BOX_SHADOW;
+
       succefullState = false;
     }
   }
 
   if (succefullState) {
+    noticeForm.reset();
     noticeForm.submit();
   }
 });
