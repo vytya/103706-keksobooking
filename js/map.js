@@ -420,7 +420,7 @@ submitButton.addEventListener('click', function () {
       succefullState = false;
     }
   }
-  
+
   if (succefullState) {
     noticeForm.submit();
     noticeForm.reset();
