@@ -251,7 +251,55 @@ closeDialog.addEventListener('click', onCloseEvent);
 document.addEventListener('keydown', onCloseGlobalEvent);
 
 // Form validations
+var titleInput = document.querySelector('#title');
 var priceInput = document.querySelector('#price');
+var addressInput = document.querySelector('#address');
+
+var checkMaxMinInputLenght = function (input) {
+
+  if (!input.validity.valid) {
+    input.style.boxShadow = ERROR_BOX_SHADOW;
+
+    if (input.validity.tooShort) {
+      var minLength = input.minLength;
+
+      input.setCustomValidity('Название должно состоять минимум из ' + minLength + ' символов');
+    } else if (input.validity.tooLong) {
+      var maxLength = input.maxLength;
+
+      input.setCustomValidity('Название не должно превышать ' + maxLength + ' символов');
+    } else if (input.validity.rangeUnderflow) {
+      var min = input.min;
+      var max = input.max;
+
+      input.setCustomValidity('Число должно быть больше ' + min + ' и меньше ' + max);
+    } else if (input.validity.valueMissing) {
+      input.setCustomValidity('Обязательное поле');
+    } else {
+      input.setCustomValidity('');
+      input.style.boxShadow = '';
+    }
+  }
+};
+
+titleInput.addEventListener('invalid', function () {
+  checkMaxMinInputLenght(titleInput);
+});
+titleInput.addEventListener('change', function () {
+  checkMaxMinInputLenght(titleInput);
+});
+priceInput.addEventListener('invalid', function () {
+  checkMaxMinInputLenght(priceInput);
+});
+priceInput.addEventListener('change', function () {
+  checkMaxMinInputLenght(priceInput);
+});
+addressInput.addEventListener('invalid', function () {
+  checkMaxMinInputLenght(addressInput);
+});
+addressInput.addEventListener('change', function () {
+  checkMaxMinInputLenght(addressInput);
+});
 
 // Form depends & relations
 var noticeForm = document.querySelector('.notice__form');
@@ -262,43 +310,21 @@ var roomNumberSelect = document.querySelector('#room_number');
 var capacitySelect = document.querySelector('#capacity');
 var submitButton = document.querySelector('.form__submit');
 
-var getSelectedOptionIndex = function (event) {
-  var selectOptions = event.target;
-  var selectedOption;
-
-  for (i = 0; i < selectOptions.length; i++) {
-    if (selectOptions[i].selected === true) {
-      selectedOption = i;
-    }
-  }
-
-  return selectedOption;
-};
-
-var getSelectedOptionValue = function (select, selectedOptionIndex) {
-  return select[selectedOptionIndex].value;
-};
-
-var getSelectedOptionText = function (select, selectedOptionIndex) {
-  return select[selectedOptionIndex].text;
-};
-
-var changeMinPrice = function (event, select) {
-  var selectedOptionIndex = getSelectedOptionIndex(event);
-  var selectedOptionText = getSelectedOptionText(select, selectedOptionIndex);
+var changeMinPrice = function (event) {
+  var selectedOptionIndex = event.target.selectedIndex;
   var minPrice;
 
-  switch (selectedOptionText) {
-    case 'Лачуга':
-      minPrice = 0;
-      break;
-    case 'Квартира':
+  switch (selectedOptionIndex) {
+    case 0:
       minPrice = 1000;
       break;
-    case 'Дом':
+    case 1:
+      minPrice = 0;
+      break;
+    case 2:
       minPrice = 5000;
       break;
-    case 'Дворец':
+    case 3:
       minPrice = 10000;
       break;
   }
@@ -307,9 +333,7 @@ var changeMinPrice = function (event, select) {
 };
 
 var changeOptionInSelect = function (event, slaveSelect) {
-  var selectedOption = getSelectedOptionIndex(event);
-
-  slaveSelect[selectedOption].selected = true;
+  slaveSelect[event.target.selectedIndex].selected = true;
 };
 
 timeInSelect.addEventListener('change', function (event) {
@@ -321,52 +345,49 @@ timeOutSelect.addEventListener('change', function (event) {
 });
 
 typeSelect.addEventListener('change', function (event) {
-  changeMinPrice(event, typeSelect);
+  changeMinPrice(event);
 });
 
-var changeAnother = function (event, master, slave) {
-  var selectedOptionIndex = getSelectedOptionIndex(event);
-  var selectedOptionValue = getSelectedOptionValue(master, selectedOptionIndex);
+var changeAnother = function (event, slave) {
+  var selectedOptionIndex = event.target.selectedIndex;
   var slaveIndex;
   var needToChangeIndex = true;
 
   if (event.target.id === 'room_number') {
-    switch (selectedOptionValue) {
-      case '1':
+    switch (selectedOptionIndex) {
+      case 0:
         slaveIndex = 2;
         break;
-      case '2':
-        slaveIndex = 2;
+      case 1:
+        slaveIndex = 1;
         break;
-      case '3':
-        slaveIndex = 2;
+      case 2:
+        slaveIndex = 0;
         break;
-      case '100':
+      case 3:
         slaveIndex = 3;
         break;
     }
-
   } else if (event.target.id === 'capacity') {
-
-    switch (selectedOptionValue) {
-      case '1':
-        if (slave[0].selected || slave[1].selected || slave[2].selected) {
-          needToChangeIndex = false;
-        } else {
-          slaveIndex = 0;
-        }
+    switch (selectedOptionIndex) {
+      case 0:
+        slaveIndex = 2;
         break;
-      case '2':
+      case 1:
         if (slave[1].selected || slave[2].selected) {
           needToChangeIndex = false;
         } else {
           slaveIndex = 1;
         }
         break;
-      case '3':
-        slaveIndex = 2;
+      case 2:
+        if (slave[0].selected || slave[1].selected || slave[2].selected) {
+          needToChangeIndex = false;
+        } else {
+          slaveIndex = 0;
+        }
         break;
-      case '0':
+      case 3:
         slaveIndex = 3;
         break;
     }
@@ -378,16 +399,17 @@ var changeAnother = function (event, master, slave) {
 };
 
 roomNumberSelect.addEventListener('change', function (event) {
-  changeAnother(event, roomNumberSelect, capacitySelect);
+  changeAnother(event, capacitySelect);
 });
 
 capacitySelect.addEventListener('change', function (event) {
-  changeAnother(event, capacitySelect, roomNumberSelect);
+  changeAnother(event, roomNumberSelect);
 });
 
 submitButton.addEventListener('click', function () {
-  var requiredInputs = noticeForm.querySelectorAll('input[required]');
+  var requiredInputs = noticeForm.elements;
   var succefullState = true;
+
 
   for (i = 0; i < requiredInputs.length; i++) {
     requiredInputs[i].style.boxShadow = '';
@@ -400,8 +422,8 @@ submitButton.addEventListener('click', function () {
   }
 
   if (succefullState) {
-    noticeForm.reset();
     noticeForm.submit();
+    noticeForm.reset();
   }
 });
 
