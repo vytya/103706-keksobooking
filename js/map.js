@@ -328,6 +328,7 @@ var changeAnother = function (event, master, slave) {
   var selectedOptionIndex = getSelectedOptionIndex(event);
   var selectedOptionValue = getSelectedOptionValue(master, selectedOptionIndex);
   var slaveIndex;
+  var needToChangeIndex = true;
 
   if (event.target.id === 'room_number') {
     switch (selectedOptionValue) {
@@ -335,25 +336,35 @@ var changeAnother = function (event, master, slave) {
         slaveIndex = 2;
         break;
       case '2':
-        slaveIndex = 1;
+        slaveIndex = 2;
         break;
       case '3':
-        slaveIndex = 0;
+        slaveIndex = 2;
         break;
       case '100':
         slaveIndex = 3;
         break;
     }
+
   } else if (event.target.id === 'capacity') {
+
     switch (selectedOptionValue) {
-      case '3':
-        slaveIndex = 2;
+      case '1':
+        if (slave[0].selected || slave[1].selected || slave[2].selected) {
+          needToChangeIndex = false;
+        } else {
+          slaveIndex = 0;
+        }
         break;
       case '2':
-        slaveIndex = 1;
+        if (slave[1].selected || slave[2].selected) {
+          needToChangeIndex = false;
+        } else {
+          slaveIndex = 1;
+        }
         break;
-      case '1':
-        slaveIndex = 0;
+      case '3':
+        slaveIndex = 2;
         break;
       case '0':
         slaveIndex = 3;
@@ -361,7 +372,9 @@ var changeAnother = function (event, master, slave) {
     }
   }
 
-  slave[slaveIndex].selected = true;
+  if (needToChangeIndex) {
+    slave[slaveIndex].selected = true;
+  }
 };
 
 roomNumberSelect.addEventListener('change', function (event) {
