@@ -407,20 +407,20 @@ capacitySelect.addEventListener('change', function (event) {
 });
 
 submitButton.addEventListener('click', function () {
-  var requiredInputs = noticeForm.elements;
+  var formElements = noticeForm.elements;
   var succefullState = true;
 
 
-  for (i = 0; i < requiredInputs.length; i++) {
-    requiredInputs[i].style.boxShadow = '';
+  for (i = 0; i < formElements.length; i++) {
+    formElements[i].style.boxShadow = '';
 
-    if (!requiredInputs[i].validity.valid) {
-      requiredInputs[i].style.boxShadow = ERROR_BOX_SHADOW;
+    if (!formElements[i].validity.valid) {
+      formElements[i].style.boxShadow = ERROR_BOX_SHADOW;
 
       succefullState = false;
     }
   }
-
+  
   if (succefullState) {
     noticeForm.submit();
     noticeForm.reset();
