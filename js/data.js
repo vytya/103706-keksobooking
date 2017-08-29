@@ -1,106 +1,99 @@
 'use strict';
 
 (function () {
-  var KEY_CODES = {
-    escape: 27,
-    enter: 13
+  var NAMES_OF_PROPERTIES = [
+    'Большая уютная квартира',
+    'Маленькая неуютная квартира',
+    'Огромный прекрасный дворец',
+    'Маленький ужасный дворец',
+    'Красивый гостевой домик',
+    'Некрасивый негостеприимный домик',
+    'Уютное бунгало далеко от моря',
+    'Неуютное бунгало по колено в воде'
+  ];
+
+  var TYPES = [
+    'flat',
+    'house',
+    'bungalo'
+  ];
+
+  var CHECK_IN_OUT_HOURS = [
+    '12:00',
+    '13:00',
+    '14:00'
+  ];
+
+  var FEATURES_LIST = [
+    'wifi',
+    'dishwasher',
+    'parking',
+    'washer',
+    'elevator',
+    'conditioner'
+  ];
+
+  var PINS_NUMBER = 8;
+
+  var getRandomNumber = function (min, max) {
+    return Math.floor(min + Math.random() * (max + 1 - min));
   };
 
+  var addZeroField = function (number) {
+    return (number < 10) ? '0' + number : number;
+  };
+
+  var getShuffledArray = function (array) {
+    array.sort(function () {
+      return Math.random() - 0.5;
+    });
+
+    return array;
+  };
+
+  var getRandomArrayElement = function (array) {
+    var randomIndex = Math.floor(Math.random() * array.length);
+
+    return array[randomIndex];
+  };
+
+  // Make random data
+  var shuffledNameOfProperties = getShuffledArray(NAMES_OF_PROPERTIES);
+  var nearbyPropertyData = [];
+  var photos = [];
   var i;
 
-  var getPropertyType = function (type) {
-    var returnType = '';
+  for (i = 0; i < PINS_NUMBER; i++) {
+    var featuresListString = getShuffledArray(FEATURES_LIST).slice(0, getRandomNumber(1, FEATURES_LIST.length));
+    var locationX = getRandomNumber(300, 900);
+    var locationY = getRandomNumber(100, 500);
 
-    switch (type) {
-      case 'flat':
-        returnType = 'Квартира';
-        break;
-      case 'bungalo':
-        returnType = 'Бунгало';
-        break;
-      case 'house':
-        returnType = 'Дом';
-        break;
-    }
-
-    return returnType;
-  };
-
-  var getFeatures = function (array) {
-    var returnString = '';
-
-    for (i = 0; i < array.length; i++) {
-      returnString = returnString + '<span class="feature__image feature__image--' + array[i] + '"></span>';
-    }
-
-    return returnString;
-  };
+    nearbyPropertyData[i] = {
+      author: {
+        avatar: 'img/avatars/user' + addZeroField(i + 1) + '.png'
+      },
+      offer: {
+        title: shuffledNameOfProperties[i],
+        address: locationX + ', ' + locationY,
+        price: getRandomNumber(1000, 1000000),
+        type: getRandomArrayElement(TYPES),
+        rooms: getRandomNumber(1, 5),
+        guests: getRandomNumber(1, 100),
+        checkin: getRandomArrayElement(CHECK_IN_OUT_HOURS),
+        checkout: getRandomArrayElement(CHECK_IN_OUT_HOURS),
+        features: featuresListString,
+        description: '',
+        photos: photos
+      },
+      location: {
+        x: locationX,
+        y: locationY
+      }
+    };
+  }
 
   window.data = {
-    getRandomNumber: function (min, max) {
-      return Math.floor(min + Math.random() * (max + 1 - min));
-    },
-
-    getRandomArrayElement: function (array) {
-      var randomIndex = Math.floor(Math.random() * array.length);
-
-      return array[randomIndex];
-    },
-
-    isEscEvent: function (event, action) {
-      if (event.keyCode === KEY_CODES.escape) {
-        action();
-      }
-    },
-
-    isEnterEvent: function (event, action) {
-      if (event.keyCode === KEY_CODES.enter) {
-        action();
-      }
-    },
-
-    isClickEvent: function (event, action) {
-      if (event.type === 'click') {
-        action();
-      }
-    },
-
-    fillData: function (clonedNode, selector, type, value) {
-      var marker = {
-        'width': 56,
-        'height': 75
-      };
-
-      if (type === 'left') {
-        clonedNode.querySelector(selector).style.left = value - marker.width / 2 + 'px';
-      } else if (type === 'top') {
-        clonedNode.querySelector(selector).style.top = value - marker.height + 'px';
-      } else if (type === 'src') {
-        clonedNode.querySelector(selector).src = value;
-      } else if (type === 'html') {
-        clonedNode.querySelector(selector).innerHTML = value;
-      } else {
-        throw new Error('parameter "fill" must be equal to "left", "top", "src" or "html"');
-      }
-    },
-
-    renderDialogData: function (data, parent, template) {
-      parent.querySelector('.dialog__panel').remove();
-
-      var clonedDialogPanelTemplate = template.cloneNode(true);
-
-      window.data.fillData(clonedDialogPanelTemplate, '.lodge__title', 'html', data.offer.title);
-      window.data.fillData(clonedDialogPanelTemplate, '.lodge__address', 'html', data.offer.address);
-      window.data.fillData(clonedDialogPanelTemplate, '.lodge__price', 'html', data.offer.price + '&#x20bd;/ночь');
-      window.data.fillData(clonedDialogPanelTemplate, '.lodge__type', 'html', getPropertyType(data.offer.type));
-      window.data.fillData(clonedDialogPanelTemplate, '.lodge__rooms-and-guests', 'html', 'Для ' + data.offer.guests + ' гостей в ' + data.offer.rooms + ' комнатах');
-      window.data.fillData(clonedDialogPanelTemplate, '.lodge__checkin-time', 'html', 'Заезд после  ' + data.offer.checkin + ', выезд до ' + data.offer.checkout);
-      window.data.fillData(clonedDialogPanelTemplate, '.lodge__features', 'html', getFeatures(data.offer.features));
-      window.data.fillData(clonedDialogPanelTemplate, '.lodge__description', 'html', data.offer.description);
-
-      parent.querySelector('img').src = data.author.avatar;
-
-      return clonedDialogPanelTemplate;
-    }
+    nearbyPropertyData: nearbyPropertyData,
   };
+
 }());
