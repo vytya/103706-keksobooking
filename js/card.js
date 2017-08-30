@@ -58,24 +58,13 @@
     return clonedDialogPanelTemplate;
   };
 
-  // Pins events
-  var pinsList = document.querySelectorAll('.pin:not(.pin__main)');
-
   // Activate clicked pin & load active info to dialog window
-  var openDialog = function (pin) {
-    var activePinIndex;
-
+  var openDialog = function () {
     if (dialogPanelParent.classList.contains('hidden')) {
       dialogPanelParent.classList.remove('hidden');
     }
 
-    for (i = 0; i < pinsList.length; i++) {
-      if (pin === pinsList[i]) {
-        activePinIndex = i;
-      }
-    }
-
-    dialogPanelParent.appendChild(renderDialogData(window.data[activePinIndex]));
+    dialogPanelParent.appendChild(renderDialogData(window.data[window.pin.activePinIndex]));
   };
 
   // Close dialog and remove active pin class
@@ -86,10 +75,11 @@
   window.card = {
     open: function (event) {
       window.utils.isEnterEvent(event, function () {
-        openDialog(event.currentTarget);
+        console.log(event);
+        openDialog();
       });
       window.utils.isClickEvent(event, function () {
-        openDialog(event.currentTarget);
+        openDialog();
       });
     },
 

@@ -16,20 +16,26 @@
     return clonedPinTemplate;
   };
 
-  // Pins events
-  var pinsList = document.querySelectorAll('.pin:not(.pin__main)');
-
   // Activate clicked pin & load active info to dialog window
   var activatePin = function (pin) {
+    var pinsList = document.querySelectorAll('.pin:not(.pin__main)');
+
     for (i = 0; i < pinsList.length; i++) {
       pinsList[i].classList.remove('pin--active');
+
+      if (pin === pinsList[i]) {
+        window.pin.activePinIndex = i;
+      }
     }
 
     pin.classList.add('pin--active');
   };
 
+
   // Close dialog and remove active pin class
   var closePin = function () {
+    var pinsList = document.querySelectorAll('.pin:not(.pin__main)');
+
     for (i = 0; i < pinsList.length; i++) {
       pinsList[i].classList.remove('pin--active');
     }
@@ -44,8 +50,8 @@
       pinsBlock.appendChild(fragment);
     },
 
-    open: function (event) {
-      activatePin(event.currentTarget);
+    open: function (pin) {
+      activatePin(pin);
     },
 
     close: function (event) {

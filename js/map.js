@@ -8,14 +8,14 @@
   var pinsList = document.querySelectorAll('.pin:not(.pin__main)');
   var closeDialog = document.querySelector('.dialog__close');
 
-  var openPinDialog = function (event) {
+  var openPinDialog = function (event, pin) {
     window.utils.isEnterEvent(event, function () {
-      window.pin.open(event);
-      window.card.open(event);
+      window.pin.open(pin);
+      window.card.open(pin);
     });
     window.utils.isClickEvent(event, function () {
-      window.pin.open(event);
-      window.card.open(event);
+      window.pin.open(pin);
+      window.card.open(pin);
     });
   };
 
@@ -32,8 +32,12 @@
 
   // Add events listeners at all pins
   for (i = 0; i < pinsList.length; i++) {
-    pinsList[i].addEventListener('click', openPinDialog);
-    pinsList[i].addEventListener('keydown', openPinDialog);
+    pinsList[i].addEventListener('click', function (event) {
+      openPinDialog(event, event.currentTarget);
+    });
+    pinsList[i].addEventListener('keydown', function (event) {
+      openPinDialog(event, event.currentTarget);
+    });
   }
 
   var onCloseGlobalEvent = function (event) {
