@@ -45,12 +45,7 @@
     },
 
     open: function (event) {
-      window.utils.isEnterEvent(event, function () {
-        activatePin(event.currentTarget);
-      });
-      window.utils.isClickEvent(event, function () {
-        activatePin(event.currentTarget);
-      });
+      activatePin(event.currentTarget);
     },
 
     close: function (event) {

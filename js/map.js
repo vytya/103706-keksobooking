@@ -9,13 +9,25 @@
   var closeDialog = document.querySelector('.dialog__close');
 
   var openPinDialog = function (event) {
-    window.pin.open(event);
-    window.card.open(event);
+    window.utils.isEnterEvent(event, function () {
+      window.pin.open(event);
+      window.card.open(event);
+    });
+    window.utils.isClickEvent(event, function () {
+      window.pin.open(event);
+      window.card.open(event);
+    });
   };
 
   var closePinDialog = function (event) {
-    window.pin.close(event);
-    window.card.close(event);
+    window.utils.isEscEvent(event, function () {
+      window.pin.close(event);
+      window.card.close(event);
+    });
+    window.utils.isClickEvent(event, function () {
+      window.pin.close(event);
+      window.card.close(event);
+    });
   };
 
   // Add events listeners at all pins
