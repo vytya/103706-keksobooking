@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var pinTemplate = document.querySelector('#pin-template').content;
   var i;
 
   // Pins events
@@ -23,6 +24,16 @@
   };
 
   window.pin = {
+    renderPin: function (data) {
+      var clonedPinTemplate = pinTemplate.cloneNode(true);
+
+      window.utils.fillData(clonedPinTemplate, '.pin', 'left', data.location.x);
+      window.utils.fillData(clonedPinTemplate, '.pin', 'top', data.location.y);
+      window.utils.fillData(clonedPinTemplate, 'img', 'src', data.author.avatar);
+
+      return clonedPinTemplate;
+    },
+
     open: function (event) {
       window.utils.isEnterEvent(event, function () {
         activatePin(event.currentTarget);
