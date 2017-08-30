@@ -92,8 +92,5 @@
     };
   }
 
-  window.data = {
-    nearbyPropertyData: nearbyPropertyData,
-  };
-
+  window.data = nearbyPropertyData;
 }());

@@ -1,11 +1,6 @@
 'use strict';
 
 (function () {
-  var KEY_CODES = {
-    escape: 27,
-    enter: 13
-  };
-
   var i;
 
   var getPropertyType = function (type) {
@@ -60,10 +55,9 @@
 
   // Pins events
   var pinsList = document.querySelectorAll('.pin:not(.pin__main)');
-  var closeDialog = document.querySelector('.dialog__close');
 
   // Activate clicked pin & load active info to dialog window
-  var activatePinAndOpenDialog = function (pin) {
+  var openDialog = function (pin) {
     var activePinIndex;
 
     if (dialogPanelParent.classList.contains('hidden')) {
@@ -74,48 +68,28 @@
       if (pin === pinsList[i]) {
         activePinIndex = i;
       }
-
-      pinsList[i].classList.remove('pin--active');
     }
 
-    dialogPanelParent.appendChild(renderDialogData(window.data.nearbyPropertyData[activePinIndex]));
-
-    pin.classList.add('pin--active');
+    dialogPanelParent.appendChild(renderDialogData(window.data[activePinIndex]));
   };
 
   // Close dialog and remove active pin class
-  var closePinAndHideDialog = function () {
+  var closeDialog = function () {
     dialogPanelParent.classList.add('hidden');
-
-    for (i = 0; i < pinsList.length; i++) {
-      pinsList[i].classList.remove('pin--active');
-    }
   };
 
-  var onPinEvent = function (event) {
-    if (event.keyCode === KEY_CODES.enter || event.type === 'click') {
-      activatePinAndOpenDialog(event.currentTarget);
+  window.card = {
+    open: function (event) {
+      window.utils.isEnterEvent(event, function () {
+        openDialog(event.currentTarget);
+      });
+      window.utils.isClickEvent(event, function () {
+        openDialog(event.currentTarget);
+      });
+    },
+
+    close: function () {
+      closeDialog();
     }
   };
-
-  var onCloseEvent = function (event) {
-    if (event.keyCode === KEY_CODES.enter || event.type === 'click') {
-      closePinAndHideDialog();
-    }
-  };
-
-  var onCloseGlobalEvent = function (event) {
-    if (event.keyCode === KEY_CODES.escape) {
-      closePinAndHideDialog();
-    }
-  };
-
-  // Add events listeners at all pins
-  for (i = 0; i < pinsList.length; i++) {
-    pinsList[i].addEventListener('click', onPinEvent);
-    pinsList[i].addEventListener('keydown', onPinEvent);
-  }
-
-  closeDialog.addEventListener('click', onCloseEvent);
-  document.addEventListener('keydown', onCloseGlobalEvent);
 }());

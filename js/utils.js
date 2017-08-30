@@ -1,7 +1,30 @@
 'use strict';
 
 (function () {
+  var KEY_CODES = {
+    escape: 27,
+    enter: 13
+  };
+
   window.utils = {
+    isClickEvent: function (event, action) {
+      if (event.type === 'click') {
+        action(event);
+      }
+    },
+
+    isEscEvent: function (event, action) {
+      if (event.keyCode === KEY_CODES.escape) {
+        action(event);
+      }
+    },
+
+    isEnterEvent: function (event, action) {
+      if (event.keyCode === KEY_CODES.enter) {
+        action(event);
+      }
+    },
+
     fillData: function (clonedNode, selector, type, value) {
       var marker = {
         'width': 56,
