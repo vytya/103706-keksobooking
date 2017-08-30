@@ -1,6 +1,11 @@
 'use strict';
 
 (function () {
+  var KEY_CODES = {
+    escape: 27,
+    enter: 13
+  };
+
   var i;
 
   var getPropertyType = function (type) {
@@ -88,8 +93,10 @@
       });
     },
 
-    close: function () {
-      closeDialog();
+    close: function (event) {
+      if (event.keyCode === KEY_CODES.enter || event.keyCode === KEY_CODES.escape || event.type === 'click') {
+        closeDialog();
+      }
     }
   };
 }());

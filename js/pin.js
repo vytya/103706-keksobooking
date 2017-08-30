@@ -5,6 +5,7 @@
   var pinTemplate = document.querySelector('#pin-template').content;
   var fragment = document.createDocumentFragment();
   var i;
+  var pinsArray = [];
 
   var renderPin = function (data) {
     var clonedPinTemplate = pinTemplate.cloneNode(true);
@@ -57,4 +58,3 @@
     }
   };
 }());
-

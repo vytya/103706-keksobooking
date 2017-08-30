@@ -5,22 +5,27 @@
   var closeDialog = document.querySelector('.dialog__close');
   var i;
 
+  var openPinDialog = function (event) {
+    window.pin.open(event);
+    window.card.open(event);
+  };
+
+  var closePinDialog = function (event) {
+    window.pin.close(event);
+    window.card.close(event);
+  };
+
   // Add events listeners at all pins
   for (i = 0; i < pinsList.length; i++) {
-    pinsList[i].addEventListener('click', window.pin.open);
-    pinsList[i].addEventListener('keydown', window.pin.open);
-
-    pinsList[i].addEventListener('click', window.card.open);
-    pinsList[i].addEventListener('keydown', window.card.open);
+    pinsList[i].addEventListener('click', openPinDialog);
+    pinsList[i].addEventListener('keydown', openPinDialog);
   }
 
   var onCloseGlobalEvent = function (event) {
-    window.utils.isEscEvent(event, window.card.close);
-    window.utils.isEscEvent(event, window.pin.close);
+    window.utils.isEscEvent(event, closePinDialog);
   };
 
   document.addEventListener('keydown', onCloseGlobalEvent);
 
-  closeDialog.addEventListener('click', window.card.close);
-  closeDialog.addEventListener('click', window.pin.close);
+  closeDialog.addEventListener('click', closePinDialog);
 }());
