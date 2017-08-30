@@ -1,8 +1,20 @@
 'use strict';
 
 (function () {
+  var pinsBlock = document.querySelector('.tokyo__pin-map');
   var pinTemplate = document.querySelector('#pin-template').content;
+  var fragment = document.createDocumentFragment();
   var i;
+
+  var renderPin = function (data) {
+    var clonedPinTemplate = pinTemplate.cloneNode(true);
+
+    window.utils.fillData(clonedPinTemplate, '.pin', 'left', data.location.x);
+    window.utils.fillData(clonedPinTemplate, '.pin', 'top', data.location.y);
+    window.utils.fillData(clonedPinTemplate, 'img', 'src', data.author.avatar);
+
+    return clonedPinTemplate;
+  };
 
   // Pins events
   var pinsList = document.querySelectorAll('.pin:not(.pin__main)');
@@ -24,14 +36,12 @@
   };
 
   window.pin = {
-    renderPin: function (data) {
-      var clonedPinTemplate = pinTemplate.cloneNode(true);
+    renderPins: function (data) {
+      for (i = 0; i < data.length; i++) {
+        fragment.appendChild(renderPin(data[i]));
+      }
 
-      window.utils.fillData(clonedPinTemplate, '.pin', 'left', data.location.x);
-      window.utils.fillData(clonedPinTemplate, '.pin', 'top', data.location.y);
-      window.utils.fillData(clonedPinTemplate, 'img', 'src', data.author.avatar);
-
-      return clonedPinTemplate;
+      pinsBlock.appendChild(fragment);
     },
 
     open: function (event) {

@@ -2,14 +2,8 @@
 
 (function () {
   var i;
-  var fragment = document.createDocumentFragment();
-  var pinsBlock = document.querySelector('.tokyo__pin-map');
 
-  for (i = 0; i < window.data.length; i++) {
-    fragment.appendChild(window.pin.renderPin(window.data[i]));
-  }
-
-  pinsBlock.appendChild(fragment);
+  window.pin.renderPins(window.data);
 
   var pinsList = document.querySelectorAll('.pin:not(.pin__main)');
   var closeDialog = document.querySelector('.dialog__close');
