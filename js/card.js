@@ -1,11 +1,6 @@
 'use strict';
 
 (function () {
-  var KEY_CODES = {
-    escape: 27,
-    enter: 13
-  };
-
   var i;
 
   var getPropertyType = function (type) {
@@ -58,34 +53,17 @@
     return clonedDialogPanelTemplate;
   };
 
-  // Activate clicked pin & load active info to dialog window
-  var openDialog = function (pin) {
-    if (dialogPanelParent.classList.contains('hidden')) {
-      dialogPanelParent.classList.remove('hidden');
-    }
-
-    dialogPanelParent.appendChild(renderDialogData(window.data[window.pin.activePinIndex]));
-  };
-
-  // Close dialog and remove active pin class
-  var closeDialog = function () {
-    dialogPanelParent.classList.add('hidden');
-  };
-
   window.card = {
-    open: function (event) {
-      window.utils.isEnterEvent(event, function () {
-        openDialog();
-      });
-      window.utils.isClickEvent(event, function () {
-        openDialog();
-      });
+    openDialog: function (pinIndex) {
+      if (dialogPanelParent.classList.contains('hidden')) {
+        dialogPanelParent.classList.remove('hidden');
+      }
+
+      dialogPanelParent.appendChild(renderDialogData(window.data[pinIndex]));
     },
 
-    close: function (event) {
-      if (event.keyCode === KEY_CODES.enter || event.keyCode === KEY_CODES.escape || event.type === 'click') {
-        closeDialog();
-      }
+    closeDialog: function () {
+      dialogPanelParent.classList.add('hidden');
     }
   };
 }());
