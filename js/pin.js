@@ -4,7 +4,7 @@
   var pinsBlock = document.querySelector('.tokyo__pin-map');
   var pinTemplate = document.querySelector('#pin-template').content;
   var fragment = document.createDocumentFragment();
-  var pinsList;
+
   var i;
 
   var renderPin = function (data) {
@@ -24,24 +24,23 @@
       }
 
       pinsBlock.appendChild(fragment);
-
-      pinsList = document.querySelectorAll('.pin:not(.pin__main)');
+      window.pin.pinsList = document.querySelectorAll('.pin:not(.pin__main)');
     },
 
     activatePin: function (pin) {
-      for (i = 0; i < pinsList.length; i++) {
-        if (pin === pinsList[i]) {
+      for (i = 0; i < window.pin.pinsList.length; i++) {
+        if (pin === window.pin.pinsList[i]) {
           window.pin.activePinIndex = i;
           pin.classList.add('pin--active');
         } else {
-          pinsList[i].classList.remove('pin--active');
+          window.pin.pinsList[i].classList.remove('pin--active');
         }
       }
     },
 
     deactivateAllPins: function () {
-      for (i = 0; i < pinsList.length; i++) {
-        pinsList[i].classList.remove('pin--active');
+      for (i = 0; i < window.pin.pinsList.length; i++) {
+        window.pin.pinsList[i].classList.remove('pin--active');
       }
     }
   };
