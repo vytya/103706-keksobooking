@@ -54,12 +54,12 @@
   };
 
   window.card = {
-    openDialog: function (pinIndex) {
+    openDialog: function (data) {
       if (dialogPanelParent.classList.contains('hidden')) {
         dialogPanelParent.classList.remove('hidden');
       }
 
-      dialogPanelParent.appendChild(renderDialogData(window.data[pinIndex]));
+      dialogPanelParent.appendChild(renderDialogData(data));
     },
 
     closeDialog: function () {

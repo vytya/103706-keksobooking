@@ -10,11 +10,11 @@
   var openPinDialog = function (event) {
     window.utils.isEnterEvent(event, function () {
       window.pin.activatePin(event.currentTarget);
-      window.card.openDialog(window.pin.activePinIndex);
+      window.card.openDialog(window.data[window.pin.activePinIndex]);
     });
     window.utils.isClickEvent(event, function () {
       window.pin.activatePin(event.currentTarget);
-      window.card.openDialog(window.pin.activePinIndex);
+      window.card.openDialog(window.data[window.pin.activePinIndex]);
     });
   };
 
