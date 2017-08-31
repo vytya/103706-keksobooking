@@ -7,12 +7,29 @@
 
   var i;
 
+  var fillData = function (clonedNode, selector, type, value) {
+    var marker = {
+      'width': 56,
+      'height': 75
+    };
+
+    if (type === 'left') {
+      clonedNode.querySelector(selector).style.left = value - marker.width / 2 + 'px';
+    } else if (type === 'top') {
+      clonedNode.querySelector(selector).style.top = value - marker.height + 'px';
+    } else if (type === 'src') {
+      clonedNode.querySelector(selector).src = value;
+    } else {
+      throw new Error('parameter "fill" must be equal to "left", "top" or "src"');
+    }
+  };
+
   var renderPin = function (data) {
     var clonedPinTemplate = pinTemplate.cloneNode(true);
 
-    window.utils.fillData(clonedPinTemplate, '.pin', 'left', data.location.x);
-    window.utils.fillData(clonedPinTemplate, '.pin', 'top', data.location.y);
-    window.utils.fillData(clonedPinTemplate, 'img', 'src', data.author.avatar);
+    fillData(clonedPinTemplate, '.pin', 'left', data.location.x);
+    fillData(clonedPinTemplate, '.pin', 'top', data.location.y);
+    fillData(clonedPinTemplate, 'img', 'src', data.author.avatar);
 
     return clonedPinTemplate;
   };

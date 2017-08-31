@@ -1,36 +1,33 @@
 'use strict';
 
 (function () {
+  var KEY_CODES = {
+    escape: 27,
+    enter: 13
+  };
+
   var i;
 
   window.pin.renderPins(window.data);
 
-  var closeDialog = document.querySelector('.dialog__close');
-
   var openPinDialog = function (event) {
-    window.utils.isEnterEvent(event, function () {
+    if (event.type === 'click' || event.keyCode === KEY_CODES.enter) {
       window.pin.activatePin(event.currentTarget);
       window.card.openDialog(window.data[window.pin.activePinIndex]);
-    });
-    window.utils.isClickEvent(event, function () {
-      window.pin.activatePin(event.currentTarget);
-      window.card.openDialog(window.data[window.pin.activePinIndex]);
-    });
+    }
   };
 
   var closePinDialog = function (event) {
-    window.utils.isEscEvent(event, function () {
+    if (event.type === 'click' || event.keyCode === KEY_CODES.escape) {
       window.pin.deactivateAllPins();
       window.card.closeDialog();
-    });
-    window.utils.isClickEvent(event, function () {
-      window.pin.deactivateAllPins();
-      window.card.closeDialog();
-    });
+    }
   };
 
   var closePinDialogGlobal = function (event) {
-    window.utils.isEscEvent(event, closePinDialog);
+    if (event.keyCode === KEY_CODES.escape) {
+      closePinDialog(event);
+    }
   };
 
   // Add events listeners at all pins
@@ -43,6 +40,7 @@
     });
   }
 
+  var closeDialog = document.querySelector('.dialog__close');
   closeDialog.addEventListener('click', closePinDialog);
   document.addEventListener('keydown', closePinDialogGlobal);
 }());
