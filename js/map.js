@@ -21,11 +21,11 @@
 
   var closePinDialog = function (event) {
     window.utils.isEscEvent(event, function () {
-      window.pin.close();
+      window.pin.deactivateAllPins();
       window.card.close(event);
     });
     window.utils.isClickEvent(event, function () {
-      window.pin.close();
+      window.pin.deactivateAllPins();
       window.card.close(event);
     });
   };

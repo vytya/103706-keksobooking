@@ -17,13 +17,6 @@
     return clonedPinTemplate;
   };
 
-  // Close dialog and remove active pin class
-  var closePin = function () {
-    for (i = 0; i < pinsList.length; i++) {
-      pinsList[i].classList.remove('pin--active');
-    }
-  };
-
   window.pin = {
     renderPins: function (data) {
       for (i = 0; i < data.length; i++) {
@@ -46,8 +39,10 @@
       }
     },
 
-    close: function () {
-      closePin();
+    deactivateAllPins: function () {
+      for (i = 0; i < pinsList.length; i++) {
+        pinsList[i].classList.remove('pin--active');
+      }
     }
   };
 }());
