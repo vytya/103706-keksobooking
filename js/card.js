@@ -75,7 +75,6 @@
   window.card = {
     open: function (event) {
       window.utils.isEnterEvent(event, function () {
-        console.log(event);
         openDialog();
       });
       window.utils.isClickEvent(event, function () {

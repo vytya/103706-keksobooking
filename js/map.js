@@ -10,22 +10,22 @@
 
   var openPinDialog = function (event, pin) {
     window.utils.isEnterEvent(event, function () {
-      window.pin.open(pin);
+      window.pin.activatePin(pin);
       window.card.open(pin);
     });
     window.utils.isClickEvent(event, function () {
-      window.pin.open(pin);
+      window.pin.activatePin(pin);
       window.card.open(pin);
     });
   };
 
   var closePinDialog = function (event) {
     window.utils.isEscEvent(event, function () {
-      window.pin.close(event);
+      window.pin.close();
       window.card.close(event);
     });
     window.utils.isClickEvent(event, function () {
-      window.pin.close(event);
+      window.pin.close();
       window.card.close(event);
     });
   };
