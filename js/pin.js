@@ -4,6 +4,7 @@
   var pinsBlock = document.querySelector('.tokyo__pin-map');
   var pinTemplate = document.querySelector('#pin-template').content;
   var fragment = document.createDocumentFragment();
+  var pinsList;
   var i;
 
   var renderPin = function (data) {
@@ -18,24 +19,18 @@
 
   // Activate clicked pin & load active info to dialog window
   var activatePin = function (pin) {
-    var pinsList = document.querySelectorAll('.pin:not(.pin__main)');
-
     for (i = 0; i < pinsList.length; i++) {
-      pinsList[i].classList.remove('pin--active');
-
       if (pin === pinsList[i]) {
         window.pin.activePinIndex = i;
+        pin.classList.add('pin--active');
+      } else {
+        pinsList[i].classList.remove('pin--active');
       }
     }
-
-    pin.classList.add('pin--active');
   };
-
 
   // Close dialog and remove active pin class
   var closePin = function () {
-    var pinsList = document.querySelectorAll('.pin:not(.pin__main)');
-
     for (i = 0; i < pinsList.length; i++) {
       pinsList[i].classList.remove('pin--active');
     }
@@ -48,15 +43,16 @@
       }
 
       pinsBlock.appendChild(fragment);
+
+      pinsList = document.querySelectorAll('.pin:not(.pin__main)');
     },
 
     open: function (pin) {
       activatePin(pin);
     },
 
-    close: function (event) {
-      window.utils.isEscEvent(event, closePin);
-      window.utils.isClickEvent(event, closePin);
+    close: function () {
+      closePin();
     }
   };
 }());

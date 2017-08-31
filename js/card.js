@@ -59,7 +59,7 @@
   };
 
   // Activate clicked pin & load active info to dialog window
-  var openDialog = function () {
+  var openDialog = function (pin) {
     if (dialogPanelParent.classList.contains('hidden')) {
       dialogPanelParent.classList.remove('hidden');
     }
