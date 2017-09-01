@@ -34,28 +34,19 @@
   var dialogPanelParent = document.querySelector('#offer-dialog');
   var dialogPanelTemplate = document.querySelector('#lodge-template').content;
 
-  var fillData = function (clonedNode, selector, type, value) {
-    if (type === 'html') {
-      clonedNode.querySelector(selector).innerHTML = value;
-    } else {
-      throw new Error('parameter "fill" must be equal to "html"');
-    }
-  };
-
   var renderDialogData = function (data) {
     dialogPanelParent.querySelector('.dialog__panel').remove();
 
     var clonedDialogPanelTemplate = dialogPanelTemplate.cloneNode(true);
 
-    fillData(clonedDialogPanelTemplate, '.lodge__title', 'html', data.offer.title);
-    fillData(clonedDialogPanelTemplate, '.lodge__address', 'html', data.offer.address);
-    fillData(clonedDialogPanelTemplate, '.lodge__price', 'html', data.offer.price + '&#x20bd;/ночь');
-    fillData(clonedDialogPanelTemplate, '.lodge__type', 'html', getPropertyType(data.offer.type));
-    fillData(clonedDialogPanelTemplate, '.lodge__rooms-and-guests', 'html', 'Для ' + data.offer.guests + ' гостей в ' + data.offer.rooms + ' комнатах');
-    fillData(clonedDialogPanelTemplate, '.lodge__checkin-time', 'html', 'Заезд после  ' + data.offer.checkin + ', выезд до ' + data.offer.checkout);
-    fillData(clonedDialogPanelTemplate, '.lodge__features', 'html', getFeatures(data.offer.features));
-    fillData(clonedDialogPanelTemplate, '.lodge__description', 'html', data.offer.description);
-
+    clonedDialogPanelTemplate.querySelector('.lodge__title').innerHTML = data.offer.title;
+    clonedDialogPanelTemplate.querySelector('.lodge__address').innerHTML = data.offer.address;
+    clonedDialogPanelTemplate.querySelector('.lodge__price').innerHTML = data.offer.price + '&#x20bd;/ночь';
+    clonedDialogPanelTemplate.querySelector('.lodge__type').innerHTML = getPropertyType(data.offer.type);
+    clonedDialogPanelTemplate.querySelector('.lodge__rooms-and-guests').innerHTML = 'Для ' + data.offer.guests + ' гостей в ' + data.offer.rooms + ' комнатах';
+    clonedDialogPanelTemplate.querySelector('.lodge__checkin-time').innerHTML = 'Заезд после  ' + data.offer.checkin + ', выезд до ' + data.offer.checkout;
+    clonedDialogPanelTemplate.querySelector('.lodge__features').innerHTML = getFeatures(data.offer.features);
+    clonedDialogPanelTemplate.querySelector('.lodge__description').innerHTML = data.offer.description;
     dialogPanelParent.querySelector('img').src = data.author.avatar;
 
     return clonedDialogPanelTemplate;

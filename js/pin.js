@@ -1,35 +1,23 @@
 'use strict';
 
 (function () {
+  var MARKER = {
+    'width': 56,
+    'height': 75
+  };
+
   var pinsBlock = document.querySelector('.tokyo__pin-map');
   var pinTemplate = document.querySelector('#pin-template').content;
   var fragment = document.createDocumentFragment();
 
   var i;
 
-  var fillData = function (clonedNode, selector, type, value) {
-    var marker = {
-      'width': 56,
-      'height': 75
-    };
-
-    if (type === 'left') {
-      clonedNode.querySelector(selector).style.left = value - marker.width / 2 + 'px';
-    } else if (type === 'top') {
-      clonedNode.querySelector(selector).style.top = value - marker.height + 'px';
-    } else if (type === 'src') {
-      clonedNode.querySelector(selector).src = value;
-    } else {
-      throw new Error('parameter "fill" must be equal to "left", "top" or "src"');
-    }
-  };
-
   var renderPin = function (data) {
     var clonedPinTemplate = pinTemplate.cloneNode(true);
 
-    fillData(clonedPinTemplate, '.pin', 'left', data.location.x);
-    fillData(clonedPinTemplate, '.pin', 'top', data.location.y);
-    fillData(clonedPinTemplate, 'img', 'src', data.author.avatar);
+    clonedPinTemplate.querySelector('.pin').style.left = data.location.x - MARKER.width / 2 + 'px';
+    clonedPinTemplate.querySelector('.pin').style.top = data.location.y - MARKER.height + 'px';
+    clonedPinTemplate.querySelector('img').src = data.author.avatar;
 
     return clonedPinTemplate;
   };
