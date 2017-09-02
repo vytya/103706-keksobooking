@@ -97,17 +97,19 @@
         y: moveEvent.clientY
       };
 
-      // Change place of pin
-      mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
-      mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
-
       // Change address input coords in value
       pinAddressCoord = {
-        x: mainPin.offsetLeft - shift.x + MAIN_PIN_MARKER.width / 2,
+        x: mainPin.offsetLeft - shift.x + Math.floor(MAIN_PIN_MARKER.width / 2),
         y: mainPin.offsetTop - shift.y + MAIN_PIN_MARKER.height
       };
 
-      addressInput.value = 'x: ' + pinAddressCoord.x + ', y: ' + pinAddressCoord.y;
+      if (pinAddressCoord.x >= 0 && pinAddressCoord.x <= mapSize.width && pinAddressCoord.y >= 0 && pinAddressCoord.y <= mapSize.height) {
+        // Change place of pin
+        mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
+        mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+
+        addressInput.value = 'x: ' + pinAddressCoord.x + ', y: ' + pinAddressCoord.y;
+      }
     };
 
     var onMouseUp = function (upEvent) {
