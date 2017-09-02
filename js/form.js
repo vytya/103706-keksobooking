@@ -63,37 +63,17 @@
   var capacitySelect = document.querySelector('#capacity');
   var submitButton = document.querySelector('.form__submit');
 
-  var changeMinPrice = function (event) {
-    var selectedOptionIndex = event.target.selectedIndex;
-    var minPrice;
-
-    switch (selectedOptionIndex) {
-      case 0:
-        minPrice = 1000;
-        break;
-      case 1:
-        minPrice = 0;
-        break;
-      case 2:
-        minPrice = 5000;
-        break;
-      case 3:
-        minPrice = 10000;
-        break;
-    }
-
-    priceInput.setAttribute('min', minPrice);
-  };
-
   var syncValues = function (element, value) {
     element.value = value;
   };
 
   window.synchronizeFields(timeInSelect, timeOutSelect, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], syncValues);
 
-  typeSelect.addEventListener('change', function (event) {
-    changeMinPrice(event);
-  });
+  var syncValueWithMin = function (element, value) {
+    element.min = value;
+  };
+
+  window.synchronizeFields(typeSelect, priceInput, ['flat', 'bungalo', 'house', 'palace'], [1000, 0, 5000, 10000], syncValueWithMin);
 
   var changeAnother = function (event, slave) {
     var selectedOptionIndex = event.target.selectedIndex;
