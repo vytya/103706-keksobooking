@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var i;
   var choosenValue;
   var choosenIndex;
 
