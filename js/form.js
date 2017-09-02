@@ -85,17 +85,11 @@
     priceInput.setAttribute('min', minPrice);
   };
 
-  var changeOptionInSelect = function (event, slaveSelect) {
-    slaveSelect[event.target.selectedIndex].selected = true;
+  var syncValues = function (element, value) {
+    element.value = value;
   };
 
-  timeInSelect.addEventListener('change', function (event) {
-    changeOptionInSelect(event, timeOutSelect);
-  });
-
-  timeOutSelect.addEventListener('change', function (event) {
-    changeOptionInSelect(event, timeInSelect);
-  });
+  window.synchronizeFields(timeInSelect, timeOutSelect, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], syncValues);
 
   typeSelect.addEventListener('change', function (event) {
     changeMinPrice(event);
