@@ -3,12 +3,11 @@
 (function () {
   var ERROR_BOX_SHADOW = 'inset 0 0 0 2px red';
 
-  var i;
   var titleInput = document.querySelector('#title');
   var priceInput = document.querySelector('#price');
   var addressInput = document.querySelector('#address');
 
-  var checkMaxMinInputLength = function (input) {
+  var checkCustomValidity = function (input) {
 
     if (!input.validity.valid) {
       input.style.boxShadow = ERROR_BOX_SHADOW;
@@ -36,22 +35,22 @@
   };
 
   titleInput.addEventListener('invalid', function () {
-    checkMaxMinInputLength(titleInput);
+    checkCustomValidity(titleInput);
   });
   titleInput.addEventListener('change', function () {
-    checkMaxMinInputLength(titleInput);
+    checkCustomValidity(titleInput);
   });
   priceInput.addEventListener('invalid', function () {
-    checkMaxMinInputLength(priceInput);
+    checkCustomValidity(priceInput);
   });
   priceInput.addEventListener('change', function () {
-    checkMaxMinInputLength(priceInput);
+    checkCustomValidity(priceInput);
   });
   addressInput.addEventListener('invalid', function () {
-    checkMaxMinInputLength(addressInput);
+    checkCustomValidity(addressInput);
   });
   addressInput.addEventListener('change', function () {
-    checkMaxMinInputLength(addressInput);
+    checkCustomValidity(addressInput);
   });
 
   // Form depends & relations
@@ -61,120 +60,25 @@
   var typeSelect = document.querySelector('#type');
   var roomNumberSelect = document.querySelector('#room_number');
   var capacitySelect = document.querySelector('#capacity');
-  var submitButton = document.querySelector('.form__submit');
 
-  var changeMinPrice = function (event) {
-    var selectedOptionIndex = event.target.selectedIndex;
-    var minPrice;
-
-    switch (selectedOptionIndex) {
-      case 0:
-        minPrice = 1000;
-        break;
-      case 1:
-        minPrice = 0;
-        break;
-      case 2:
-        minPrice = 5000;
-        break;
-      case 3:
-        minPrice = 10000;
-        break;
-    }
-
-    priceInput.setAttribute('min', minPrice);
+  var syncValues = function (element, value) {
+    element.value = value;
   };
 
-  var changeOptionInSelect = function (event, slaveSelect) {
-    slaveSelect[event.target.selectedIndex].selected = true;
+  window.synchronizeFields(timeInSelect, timeOutSelect, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], syncValues);
+  window.synchronizeFields(timeOutSelect, timeInSelect, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], syncValues);
+
+  window.synchronizeFields(roomNumberSelect, capacitySelect, ['1', '2', '3', '100'], ['1', '2', '3', '0'], syncValues);
+  window.synchronizeFields(capacitySelect, roomNumberSelect, ['1', '2', '3', '0'], ['1', '2', '3', '100'], syncValues);
+
+  var syncValueWithMin = function (element, value) {
+    element.min = value;
   };
 
-  timeInSelect.addEventListener('change', function (event) {
-    changeOptionInSelect(event, timeOutSelect);
-  });
+  window.synchronizeFields(typeSelect, priceInput, ['flat', 'bungalo', 'house', 'palace'], [1000, 0, 5000, 10000], syncValueWithMin);
 
-  timeOutSelect.addEventListener('change', function (event) {
-    changeOptionInSelect(event, timeInSelect);
-  });
-
-  typeSelect.addEventListener('change', function (event) {
-    changeMinPrice(event);
-  });
-
-  var changeAnother = function (event, slave) {
-    var selectedOptionIndex = event.target.selectedIndex;
-    var slaveIndex;
-    var needToChangeIndex = true;
-
-    if (event.target.id === 'room_number') {
-      switch (selectedOptionIndex) {
-        case 0:
-          slaveIndex = 2;
-          break;
-        case 1:
-          slaveIndex = 1;
-          break;
-        case 2:
-          slaveIndex = 0;
-          break;
-        case 3:
-          slaveIndex = 3;
-          break;
-      }
-    } else if (event.target.id === 'capacity') {
-      switch (selectedOptionIndex) {
-        case 0:
-          slaveIndex = 2;
-          break;
-        case 1:
-          if (slave[1].selected || slave[2].selected) {
-            needToChangeIndex = false;
-          } else {
-            slaveIndex = 1;
-          }
-          break;
-        case 2:
-          if (slave[0].selected || slave[1].selected || slave[2].selected) {
-            needToChangeIndex = false;
-          } else {
-            slaveIndex = 0;
-          }
-          break;
-        case 3:
-          slaveIndex = 3;
-          break;
-      }
-    }
-
-    if (needToChangeIndex) {
-      slave[slaveIndex].selected = true;
-    }
-  };
-
-  roomNumberSelect.addEventListener('change', function (event) {
-    changeAnother(event, capacitySelect);
-  });
-
-  capacitySelect.addEventListener('change', function (event) {
-    changeAnother(event, roomNumberSelect);
-  });
-
-  submitButton.addEventListener('click', function () {
-    var formElements = noticeForm.elements;
-    var succefullState = true;
-
-
-    for (i = 0; i < formElements.length; i++) {
-      formElements[i].style.boxShadow = '';
-
-      if (!formElements[i].validity.valid) {
-        formElements[i].style.boxShadow = ERROR_BOX_SHADOW;
-
-        succefullState = false;
-      }
-    }
-
-    if (succefullState) {
+  noticeForm.addEventListener('submit', function () {
+    if (noticeForm.checkValidity()) {
       noticeForm.submit();
       noticeForm.reset();
     }
