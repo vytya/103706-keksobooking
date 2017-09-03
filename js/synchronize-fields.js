@@ -12,13 +12,6 @@
 
         syncFunction(secondInput, secondData[choosenIndex]);
       });
-
-      secondInput.addEventListener('change', function () {
-        choosenValue = secondInput.value;
-        choosenIndex = secondData.indexOf(choosenValue);
-
-        syncFunction(firstInput, firstData[choosenIndex]);
-      });
     }
   };
 }());
