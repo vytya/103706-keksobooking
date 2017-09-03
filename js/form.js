@@ -60,7 +60,6 @@
   var typeSelect = document.querySelector('#type');
   var roomNumberSelect = document.querySelector('#room_number');
   var capacitySelect = document.querySelector('#capacity');
-  var submitButton = document.querySelector('.form__submit');
 
   var syncValues = function (element, value) {
     element.value = value;
