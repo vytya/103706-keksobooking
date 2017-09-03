@@ -20,26 +20,6 @@
     window.card.openDialog(data[window.pin.activePinIndex]);
   };
 
-  var onError = function (message) {
-    var node = document.createElement('div');
-
-    node.style.width = 50 + '%';
-    node.style.height = 100 + 'px';
-    node.style.backgroundColor = 'red';
-    node.style.position = 'absolute';
-    node.style.zIndex = 10;
-    node.style.top = 50 + '%';
-    node.style.left = 50 + '%';
-    node.style.transform = 'translate(-50%, -50%)';
-    node.style.display = 'flex';
-    node.style.alignItems = 'center';
-    node.style.justifyContent = 'center';
-
-    node.textContent = message;
-
-    document.body.insertAdjacentElement('afterbegin', node);
-  };
-
   var onSuccessLoad = function (data) {
     window.pin.renderPins(data);
 
@@ -56,7 +36,7 @@
     }
   };
 
-  window.backend.load(onSuccessLoad, onError);
+  window.backend.load(onSuccessLoad, window.backend.onError);
 
   var closeDialog = document.querySelector('.dialog__close');
 
