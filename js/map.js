@@ -15,31 +15,55 @@
 
   var i;
 
-  window.pin.renderPins(window.data);
-
-  var openPinDialog = function (event) {
+  var openPinDialog = function (event, data) {
     window.pin.activatePin(event.currentTarget);
-    window.card.openDialog(window.data[window.pin.activePinIndex]);
+    window.card.openDialog(data[window.pin.activePinIndex]);
   };
+
+  var onError = function (message) {
+    var node = document.createElement('div');
+
+    node.style.width = 50 + '%';
+    node.style.height = 100 + 'px';
+    node.style.backgroundColor = 'red';
+    node.style.position = 'absolute';
+    node.style.zIndex = 10;
+    node.style.top = 50 + '%';
+    node.style.left = 50 + '%';
+    node.style.transform = 'translate(-50%, -50%)';
+    node.style.display = 'flex';
+    node.style.alignItems = 'center';
+    node.style.justifyContent = 'center';
+
+    node.textContent = message;
+
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
+
+  var onSuccessLoad = function (data) {
+    window.pin.renderPins(data);
+
+    // Add events listeners at all pins
+    for (i = 0; i < window.pin.pinsList.length; i++) {
+      window.pin.pinsList[i].addEventListener('click', function (event) {
+        openPinDialog(event, data);
+      });
+      window.pin.pinsList[i].addEventListener('keydown', function (event) {
+        if (event.keyCode === KEY_CODES.enter) {
+          openPinDialog(event, data);
+        }
+      });
+    }
+  };
+
+  window.backend.load(onSuccessLoad, onError);
+
+  var closeDialog = document.querySelector('.dialog__close');
 
   var closePinDialog = function () {
     window.pin.deactivateAllPins();
     window.card.closeDialog();
   };
-
-  // Add events listeners at all pins
-  for (i = 0; i < window.pin.pinsList.length; i++) {
-    window.pin.pinsList[i].addEventListener('click', function (event) {
-      openPinDialog(event);
-    });
-    window.pin.pinsList[i].addEventListener('keydown', function (event) {
-      if (event.keyCode === KEY_CODES.enter) {
-        openPinDialog(event);
-      }
-    });
-  }
-
-  var closeDialog = document.querySelector('.dialog__close');
 
   closeDialog.addEventListener('click', function () {
     closePinDialog();
