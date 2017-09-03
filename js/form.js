@@ -3,7 +3,6 @@
 (function () {
   var ERROR_BOX_SHADOW = 'inset 0 0 0 2px red';
 
-  var i;
   var titleInput = document.querySelector('#title');
   var priceInput = document.querySelector('#price');
   var addressInput = document.querySelector('#address');
@@ -79,22 +78,8 @@
 
   window.synchronizeFields(typeSelect, priceInput, ['flat', 'bungalo', 'house', 'palace'], [1000, 0, 5000, 10000], syncValueWithMin);
 
-  submitButton.addEventListener('click', function () {
-    var formElements = noticeForm.elements;
-    var succefullState = true;
-
-
-    for (i = 0; i < formElements.length; i++) {
-      formElements[i].style.boxShadow = '';
-
-      if (!formElements[i].validity.valid) {
-        formElements[i].style.boxShadow = ERROR_BOX_SHADOW;
-
-        succefullState = false;
-      }
-    }
-
-    if (succefullState) {
+  noticeForm.addEventListener('submit', function () {
+    if (noticeForm.checkValidity()) {
       noticeForm.submit();
       noticeForm.reset();
     }
