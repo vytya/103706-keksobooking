@@ -11,7 +11,7 @@
       if (xhr.status === 200) {
         onSuccess(xhr.response);
       } else {
-        onError(xhr.response);
+        onError('Неизвестный статус: ' + xhr.status + ' ' + xhr.statusText);
       }
     });
     xhr.addEventListener('error', function () {
@@ -47,7 +47,7 @@
       node.style.width = 50 + '%';
       node.style.height = 100 + 'px';
       node.style.backgroundColor = 'red';
-      node.style.position = 'absolute';
+      node.style.position = 'fixed';
       node.style.zIndex = 10;
       node.style.top = 50 + '%';
       node.style.left = 50 + '%';
@@ -55,6 +55,7 @@
       node.style.display = 'flex';
       node.style.alignItems = 'center';
       node.style.justifyContent = 'center';
+      node.style.color = 'white';
 
       node.textContent = message;
 
