@@ -77,10 +77,13 @@
 
   window.synchronizeFields(typeSelect, priceInput, ['flat', 'bungalo', 'house', 'palace'], [1000, 0, 5000, 10000], syncValueWithMin);
 
-  noticeForm.addEventListener('submit', function () {
+  noticeForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+
     if (noticeForm.checkValidity()) {
-      noticeForm.submit();
-      noticeForm.reset();
+      window.backend.save(new FormData(noticeForm), function () {
+        noticeForm.reset();
+      }, window.backend.onError);
     }
   });
 }());

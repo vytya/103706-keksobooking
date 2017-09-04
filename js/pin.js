@@ -29,6 +29,7 @@
       }
 
       pinsBlock.appendChild(fragment);
+
       window.pin.pinsList = document.querySelectorAll('.pin:not(.pin__main)');
     },
 
