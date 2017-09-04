@@ -47,7 +47,7 @@
       node.style.width = 50 + '%';
       node.style.height = 100 + 'px';
       node.style.backgroundColor = 'red';
-      node.style.position = 'absolute';
+      node.style.position = 'fixed';
       node.style.zIndex = 10;
       node.style.top = 50 + '%';
       node.style.left = 50 + '%';
