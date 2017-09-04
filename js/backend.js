@@ -11,7 +11,7 @@
       if (xhr.status === 200) {
         onSuccess(xhr.response);
       } else {
-        onError('Неизвестный статус: ' + xhr.status + ' ' + xhr.statusText);
+        onError('Ошибка: ' + xhr.status + ' ' + xhr.statusText);
       }
     });
     xhr.addEventListener('error', function () {
