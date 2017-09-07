@@ -46,17 +46,19 @@
             if (activeFilters[0].housing_type !== 'any') {
               return it.offer.type === activeFilters[0].housing_type;
             }
-            if (activeFilters[1].housing_price !== 'any') {
-              switch (activeFilters[1].housing_price) {
-                case 'middle':
-                  return it.offer.price > 10000 && it.offer.price < 50000;
-                case 'low':
-                  return it.offer.price < 10000;
-                case 'high':
-                  return it.offer.price > 50000;
-              }
-            }
-          });
+          }).filter(function (it) {
+
+        if (activeFilters[1].housing_price !== 'any') {
+          switch (activeFilters[1].housing_price) {
+            case 'middle':
+              return it.offer.price > 10000 && it.offer.price < 50000;
+            case 'low':
+              return it.offer.price < 10000;
+            case 'high':
+              return it.offer.price > 50000;
+          }
+        }
+      });
 
       var pinsArray = (pinFilteredArray.length === 0) ? pins : pinFilteredArray;
 
