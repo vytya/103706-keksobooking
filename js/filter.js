@@ -5,45 +5,41 @@
   var selectFilters = filters.querySelectorAll('select');
   var featureFilters = filters.querySelectorAll('input[type="checkbox"]');
 
-  var activeFilters = [];
   var selectActiveFilters = [];
   var checkboxActiveValues = [];
 
-  var updateActiveFiltersAndPins = function () {
-    activeFilters = selectActiveFilters.concat(checkboxActiveValues);
-
-    console.log(activeFilters);
+  var updateActiveFilters = function () {
+    window.activeFilters = selectActiveFilters.concat(checkboxActiveValues);
+    window.map.updatePins(window.activeFilters);
   };
 
   [].map.call(selectFilters, function (it, i) {
-    var filterObject = {
-      name: it.name,
-      value: it.value
-    };
+    var key = it.name;
+    var filterObject = {};
+    filterObject[key] = it.value;
 
     selectActiveFilters.push(filterObject);
 
     it.addEventListener('change', function (event) {
-      selectActiveFilters[i].value = event.target.value;
+      selectActiveFilters[i][key] = event.target.value;
 
-      updateActiveFiltersAndPins();
+      updateActiveFilters();
     });
   });
 
   [].map.call(featureFilters, function (it, i) {
-    var filterObject = {
-      name: it.value,
-      value: it.checked
-    };
+    var key = it.value;
+    var filterObject = {};
+    filterObject[key] = it.checked;
 
     checkboxActiveValues.push(filterObject);
 
     it.addEventListener('change', function (event) {
-      checkboxActiveValues[i].value = event.target.checked;
+      checkboxActiveValues[i][key] = event.target.checked;
 
-      updateActiveFiltersAndPins();
+      updateActiveFilters();
     });
   });
 
-  updateActiveFiltersAndPins();
+  updateActiveFilters();
 }());

@@ -15,34 +15,65 @@
 
   var i;
 
+  var pins = [];
+
+  var onSuccessLoad = function (data) {
+    pins = data;
+    window.map.updatePins();
+  };
+
+  window.backend.load(onSuccessLoad, window.backend.onError);
+
   var openPinDialog = function (event, data) {
     window.pin.activatePin(event.currentTarget);
     window.card.openDialog(data[window.pin.activePinIndex]);
   };
-
-  var onSuccessLoad = function (data) {
-    window.pin.renderPins(data);
-
-    // Add events listeners at all pins
-    for (i = 0; i < window.pin.pinsList.length; i++) {
-      window.pin.pinsList[i].addEventListener('click', function (event) {
-        openPinDialog(event, data);
-      });
-      window.pin.pinsList[i].addEventListener('keydown', function (event) {
-        if (event.keyCode === KEY_CODES.enter) {
-          openPinDialog(event, data);
-        }
-      });
-    }
-  };
-
-  window.backend.load(onSuccessLoad, window.backend.onError);
 
   var closeDialog = document.querySelector('.dialog__close');
 
   var closePinDialog = function () {
     window.pin.deactivateAllPins();
     window.card.closeDialog();
+  };
+
+  window.map = {
+    updatePins: function () {
+      var activeFilters = window.activeFilters;
+      //console.log(pins, activeFilters);
+
+      var pinFilteredArray = pins.
+          filter(function (it) {
+            if (activeFilters[0].housing_type !== 'any') {
+              return it.offer.type === activeFilters[0].housing_type;
+            }
+            if (activeFilters[1].housing_price !== 'any') {
+              switch (activeFilters[1].housing_price) {
+                case 'middle':
+                  return it.offer.price > 10000 && it.offer.price < 50000;
+                case 'low':
+                  return it.offer.price < 10000;
+                case 'high':
+                  return it.offer.price > 50000;
+              }
+            }
+          });
+
+      var pinsArray = (pinFilteredArray.length === 0) ? pins : pinFilteredArray;
+
+      window.pin.renderPins(pinsArray);
+
+      // Add events listeners at all pins
+      for (i = 0; i < window.pin.pinsList.length; i++) {
+        window.pin.pinsList[i].addEventListener('click', function (event) {
+          openPinDialog(event, pinsArray);
+        });
+        window.pin.pinsList[i].addEventListener('keydown', function (event) {
+          if (event.keyCode === KEY_CODES.enter) {
+            openPinDialog(event, pinsArray);
+          }
+        });
+      }
+    }
   };
 
   closeDialog.addEventListener('click', function () {

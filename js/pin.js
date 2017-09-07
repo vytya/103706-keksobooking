@@ -24,6 +24,12 @@
 
   window.pin = {
     renderPins: function (data) {
+      var activePinsList = document.querySelectorAll('.pin:not(.pin__main)');
+
+      activePinsList.forEach(function (it) {
+        it.parentNode.removeChild(it);
+      });
+
       for (i = 0; i < data.length; i++) {
         fragment.appendChild(renderPin(data[i]));
       }
