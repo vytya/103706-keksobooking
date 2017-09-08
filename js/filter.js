@@ -14,10 +14,8 @@
     window.map.updatePins(window.activeFilters);
   };
 
-  selectActiveFilters = [].map.call(selectElements, function (it, i, array) {
-    it.addEventListener('change', function(event) {
-      changeSelectValues(event);
-    });
+  selectActiveFilters = [].map.call(selectElements, function (it) {
+    it.addEventListener('change', changeSelectValues);
 
     return it.value;
   });
