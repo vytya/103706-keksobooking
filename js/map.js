@@ -37,11 +37,9 @@
   };
 
   var checkSelectFilters = function(activeFilter, checkElement) {
-    if (checkElement.offer.type !== activeFilter) {
-      return false;
+    if (checkElement.offer.type === activeFilter) {
+      return true;
     }
-
-    return true;
   };
 
   window.map = {
@@ -50,7 +48,11 @@
 
       var pinFilteredArray = pins.
           filter(function (it) {
-            return checkSelectFilters(activeFilters[0], it);
+            if (activeFilters[0] !== 'any') {
+              return checkSelectFilters(activeFilters[0], it);;
+            } else {
+              return true;
+            }
           });
 
           /*filter(function(it, i, array){
