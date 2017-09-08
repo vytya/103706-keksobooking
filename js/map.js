@@ -36,54 +36,92 @@
     window.card.closeDialog();
   };
 
-  var checkSelectFilters = function(activeFilter, checkElement) {
-    if (checkElement.offer.type === activeFilter) {
-      return true;
-    }
-  };
 
   window.map = {
     updatePins: function () {
-      var activeFilters = window.activeFilters;
+      var activeFilters = window.filters;
 
       var pinFilteredArray = pins.
           filter(function (it) {
+            var ok = true;
+console.log(it.offer.features);
             if (activeFilters[0] !== 'any') {
-              return checkSelectFilters(activeFilters[0], it);;
-            } else {
-              return true;
+              ok = it.offer.type === activeFilters[0];
             }
-          });
 
-          /*filter(function(it, i, array){
-            if (activeFilters[1] !== 'any') {
+            if (ok && activeFilters[1] !== 'any') {
               switch (activeFilters[1]) {
                 case 'middle':
-                  return it.offer.price > 10000 && it.offer.price < 50000;
+                  ok = it.offer.price >= 10000 && it.offer.price <= 50000;
+                  break;
+
                 case 'low':
-                  return it.offer.price < 10000;
+                  ok = it.offer.price < 10000;
+                  break;
+
                 case 'high':
-                  return it.offer.price > 50000;
+                  ok = it.offer.price > 50000;
+                  break;
               }
-            } else {
-              return array;
             }
 
-          });*/
-//console.log(pinFilteredArray);
+            if (ok && activeFilters[2] !== 'any') {
+              ok = it.offer.rooms === +activeFilters[2];
+            }
 
-      var pinsArray = (pinFilteredArray.length === 0) ? pins : pinFilteredArray;
+            if (ok && activeFilters[3] !== 'any') {
+              ok = it.offer.guests === +activeFilters[3];
+            }
+
+            if (ok && activeFilters[4]) {
+              ok = it.offer.features.some(function (itIn) {
+                return itIn === 'wifi';
+              });
+            }
+
+            if (ok && activeFilters[5]) {
+              ok = it.offer.features.some(function (itIn) {
+                return itIn === 'dishwasher';
+              });
+            }
+
+            if (ok && activeFilters[6]) {
+              ok = it.offer.features.some(function (itIn) {
+                return itIn === 'parking';
+              });
+            }
+
+            if (ok && activeFilters[7]) {
+              ok = it.offer.features.some(function (itIn) {
+                return itIn === 'washer';
+              });
+            }
+
+            if (ok && activeFilters[8]) {
+              ok = it.offer.features.some(function (itIn) {
+                return itIn === 'elevator';
+              });
+            }
+
+            if (ok && activeFilters[9]) {
+              ok = it.offer.features.some(function (itIn) {
+                return itIn === 'conditioner';
+              });
+            }
+        
+            return ok;
+          });
 
       window.pin.renderPins(pinFilteredArray);
 
       // Add events listeners at all pins
       for (i = 0; i < window.pin.pinsList.length; i++) {
         window.pin.pinsList[i].addEventListener('click', function (event) {
-          openPinDialog(event, pinsArray);
+          openPinDialog(event, pinFilteredArray);
         });
         window.pin.pinsList[i].addEventListener('keydown', function (event) {
           if (event.keyCode === KEY_CODES.enter) {
-            openPinDialog(event, pinsArray);
+            openPinDialog(event, pinFilteredArray);
           }
         });
       }

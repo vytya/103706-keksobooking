@@ -3,48 +3,42 @@
 (function () {
   var filters = document.querySelector('.tokyo__filters');
   var selectElements = filters.querySelectorAll('select');
-  var featureElements = filters.querySelectorAll('input[type="checkbox"]');
-
-  var selectActiveFilters = [];
-  //var checkboxActiveValues = [];
+  var checkboxElements = filters.querySelectorAll('input[type="checkbox"]');
 
   var updateActiveFilters = function () {
-    window.activeFilters = selectActiveFilters;
-    //window.activeFilters = selectActiveFilters.concat(checkboxActiveValues);
-    window.map.updatePins(window.activeFilters);
+    window.filters = activeSelectValues.concat(checkboxActiveValues);
+    window.map.updatePins();
   };
 
-  selectActiveFilters = [].map.call(selectElements, function (it) {
-    it.addEventListener('change', function(event) {
-      changeSelectValues(event);
+  var activeSelectValues = [].map.call(selectElements, function (it) {
+    it.addEventListener('change', function (event) {
+      changeSelectValue(event);
     });
 
     return it.value;
   });
 
-  var changeSelectValues = function (event) {
+  var checkboxActiveValues = [].map.call(checkboxElements, function (it) {
+    it.addEventListener('change', function (event) {
+      changeCheckboxValue(event);
+    });
+
+    return it.checked;
+  });
+
+  var changeSelectValue = function (event) {
     var changedSelectIndex = [].slice.call(selectElements).indexOf(event.target);
-    selectActiveFilters[changedSelectIndex] = event.target.value;
+    activeSelectValues[changedSelectIndex] = event.target.value;
 
     updateActiveFilters();
-};
+  };
 
+  var changeCheckboxValue = function (event) {
+    var changedCheckboxIndex = [].slice.call(checkboxElements).indexOf(event.target);
+    checkboxActiveValues[changedCheckboxIndex] = event.target.checked;
 
-  /*
-
-  /*[].map.call(featureFilters, function (it, i) {
-    var key = it.value;
-    var filterObject = {};
-    filterObject[key] = it.checked;
-
-    checkboxActiveValues.push(filterObject);
-
-    it.addEventListener('change', function (event) {
-      checkboxActiveValues[i][key] = event.target.checked;
-
-      updateActiveFilters();
-    });
-  });*/
+    updateActiveFilters();
+  };
 
   updateActiveFilters();
 }());
