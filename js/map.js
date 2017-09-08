@@ -113,7 +113,7 @@
           });
 
       window.pin.removeAllPins();
-      window.pin.renderPins(pinFilteredArray);
+      window.debounce(window.pin.renderPins(pinFilteredArray));
 
       // Add events listeners at all pins
       for (i = 0; i < window.pin.pinsList.length; i++) {
