@@ -27,7 +27,7 @@
     selectActiveFilters[changedSelectIndex] = event.target.value;
 
     updateActiveFilters();
-  }
+};
 
 
   /*

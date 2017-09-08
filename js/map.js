@@ -36,23 +36,21 @@
     window.card.closeDialog();
   };
 
-  var checkSelectFilters = function(it, i, array, activeFilter, checkElement) {
-
-    if (activeFilter === 'any' && checkElement !== activeFilter) {
+  var checkSelectFilters = function(activeFilter, checkElement) {
+    if (checkElement.offer.type !== activeFilter) {
       return false;
     }
-console.log(activeFilter, checkElement);
+
     return true;
-  }
+  };
 
   window.map = {
     updatePins: function () {
       var activeFilters = window.activeFilters;
-      //console.log(pins, activeFilters);
 
       var pinFilteredArray = pins.
-          filter(function (it, i, array) {
-            checkSelectFilters(it, i, array, activeFilters[0], it.offer.type);
+          filter(function (it) {
+            return checkSelectFilters(activeFilters[0], it);
           });
 
           /*filter(function(it, i, array){
@@ -70,7 +68,7 @@ console.log(activeFilter, checkElement);
             }
 
           });*/
-console.log(pinFilteredArray);
+//console.log(pinFilteredArray);
 
       var pinsArray = (pinFilteredArray.length === 0) ? pins : pinFilteredArray;
 
