@@ -15,7 +15,9 @@
   };
 
   selectActiveFilters = [].map.call(selectElements, function (it) {
-    it.addEventListener('change', changeSelectValues);
+    it.addEventListener('change', function(event) {
+      changeSelectValues(event);
+    });
 
     return it.value;
   });
