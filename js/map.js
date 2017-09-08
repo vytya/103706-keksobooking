@@ -44,7 +44,7 @@
       var pinFilteredArray = pins.
           filter(function (it) {
             var ok = true;
-console.log(it.offer.features);
+
             if (activeFilters[0] !== 'any') {
               ok = it.offer.type === activeFilters[0];
             }
@@ -108,10 +108,11 @@ console.log(it.offer.features);
                 return itIn === 'conditioner';
               });
             }
-        
+
             return ok;
           });
 
+      window.pin.removeAllPins();
       window.pin.renderPins(pinFilteredArray);
 
       // Add events listeners at all pins

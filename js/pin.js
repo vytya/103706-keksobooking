@@ -24,12 +24,6 @@
 
   window.pin = {
     renderPins: function (data) {
-      var activePinsList = document.querySelectorAll('.pin:not(.pin__main)');
-
-      activePinsList.forEach(function (it) {
-        it.parentNode.removeChild(it);
-      });
-
       for (i = 0; i < data.length; i++) {
         fragment.appendChild(renderPin(data[i]));
       }
@@ -53,6 +47,14 @@
     deactivateAllPins: function () {
       for (i = 0; i < window.pin.pinsList.length; i++) {
         window.pin.pinsList[i].classList.remove('pin--active');
+      }
+    },
+
+    removeAllPins: function () {
+      var activePinsList = document.querySelectorAll('.pin:not(.pin__main)');
+
+      for (i = 0; i < activePinsList.length; i++) {
+        activePinsList[i].parentNode.removeChild(activePinsList[i]);
       }
     }
   };
