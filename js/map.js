@@ -36,33 +36,45 @@
     window.card.closeDialog();
   };
 
+  var checkSelectFilters = function(it, i, array, activeFilter, checkElement) {
+
+    if (activeFilter === 'any' && checkElement !== activeFilter) {
+      return false;
+    }
+console.log(activeFilter, checkElement);
+    return true;
+  }
+
   window.map = {
     updatePins: function () {
       var activeFilters = window.activeFilters;
       //console.log(pins, activeFilters);
 
       var pinFilteredArray = pins.
-          filter(function (it) {
-            if (activeFilters[0].housing_type !== 'any') {
-              return it.offer.type === activeFilters[0].housing_type;
-            }
-          }).filter(function (it) {
+          filter(function (it, i, array) {
+            checkSelectFilters(it, i, array, activeFilters[0], it.offer.type);
+          });
 
-        if (activeFilters[1].housing_price !== 'any') {
-          switch (activeFilters[1].housing_price) {
-            case 'middle':
-              return it.offer.price > 10000 && it.offer.price < 50000;
-            case 'low':
-              return it.offer.price < 10000;
-            case 'high':
-              return it.offer.price > 50000;
-          }
-        }
-      });
+          /*filter(function(it, i, array){
+            if (activeFilters[1] !== 'any') {
+              switch (activeFilters[1]) {
+                case 'middle':
+                  return it.offer.price > 10000 && it.offer.price < 50000;
+                case 'low':
+                  return it.offer.price < 10000;
+                case 'high':
+                  return it.offer.price > 50000;
+              }
+            } else {
+              return array;
+            }
+
+          });*/
+console.log(pinFilteredArray);
 
       var pinsArray = (pinFilteredArray.length === 0) ? pins : pinFilteredArray;
 
-      window.pin.renderPins(pinsArray);
+      window.pin.renderPins(pinFilteredArray);
 
       // Add events listeners at all pins
       for (i = 0; i < window.pin.pinsList.length; i++) {
