@@ -25,7 +25,7 @@
   window.pin = {
     renderPins: function (data) {
       for (i = 0; i < data.length; i++) {
-        window.debounce(fragment.appendChild(renderPin(data[i])));
+        fragment.appendChild(renderPin(data[i]));
       }
 
       pinsBlock.appendChild(fragment);

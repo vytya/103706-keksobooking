@@ -7,7 +7,7 @@
 
   var updateActiveFilters = function () {
     window.filters = activeSelectValues.concat(checkboxActiveValues);
-    window.map.updatePins();
+    window.debounce(window.map.updatePins);
   };
 
   var activeSelectValues = [].map.call(selectElements, function (it) {

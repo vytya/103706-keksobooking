@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var DEBOUNCE_INTERVAL = 50000;
+  var DEBOUNCE_INTERVAL = 500;
 
   var lastTimeout;
 
