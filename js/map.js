@@ -24,9 +24,13 @@
 
   window.backend.load(onSuccessLoad, window.backend.onError);
 
-  var openPinDialog = function (event, data) {
+  var openPinDialog = function (event) {
+    if (event.type === 'keydown' && event.keyCode !== KEY_CODES.enter) {
+      return;
+    }
+
     window.pin.activatePin(event.currentTarget);
-    window.card.openDialog(data[window.pin.activePinIndex]);
+    window.card.openDialog(window.map.filteredData[window.pin.activePinIndex]);
   };
 
   var closeDialog = document.querySelector('.dialog__close');
@@ -36,95 +40,29 @@
     window.card.closeDialog();
   };
 
+  var removeAllPinsAndListeners = function (pinList) {
+    if (!pinList) {
+      return;
+    }
+    for (i = 0; i < pinList.length; i++) {
+      pinList[i].removeEventListener('click', openPinDialog);
+      pinList[i].removeEventListener('keydown', openPinDialog);
+    }
+
+    window.pin.removeAllPins();
+  };
 
   window.map = {
     updatePins: function () {
-      var activeFilters = window.filters;
+      window.map.filteredData = window.filter.filterData(pins);
 
-      var pinFilteredArray = pins.
-          filter(function (it) {
-            var ok = true;
-
-            if (activeFilters[0] !== 'any') {
-              ok = it.offer.type === activeFilters[0];
-            }
-
-            if (ok && activeFilters[1] !== 'any') {
-              switch (activeFilters[1]) {
-                case 'middle':
-                  ok = it.offer.price >= 10000 && it.offer.price <= 50000;
-                  break;
-
-                case 'low':
-                  ok = it.offer.price < 10000;
-                  break;
-
-                case 'high':
-                  ok = it.offer.price > 50000;
-                  break;
-              }
-            }
-
-            if (ok && activeFilters[2] !== 'any') {
-              ok = it.offer.rooms === +activeFilters[2];
-            }
-
-            if (ok && activeFilters[3] !== 'any') {
-              ok = it.offer.guests === +activeFilters[3];
-            }
-
-            if (ok && activeFilters[4]) {
-              ok = it.offer.features.some(function (itIn) {
-                return itIn === 'wifi';
-              });
-            }
-
-            if (ok && activeFilters[5]) {
-              ok = it.offer.features.some(function (itIn) {
-                return itIn === 'dishwasher';
-              });
-            }
-
-            if (ok && activeFilters[6]) {
-              ok = it.offer.features.some(function (itIn) {
-                return itIn === 'parking';
-              });
-            }
-
-            if (ok && activeFilters[7]) {
-              ok = it.offer.features.some(function (itIn) {
-                return itIn === 'washer';
-              });
-            }
-
-            if (ok && activeFilters[8]) {
-              ok = it.offer.features.some(function (itIn) {
-                return itIn === 'elevator';
-              });
-            }
-
-            if (ok && activeFilters[9]) {
-              ok = it.offer.features.some(function (itIn) {
-                return itIn === 'conditioner';
-              });
-            }
-
-            return ok;
-          });
-
-      window.pin.removeAllPins();
-      window.debounce(window.pin.renderPins(pinFilteredArray));
+      removeAllPinsAndListeners(window.pin.pinsList);
+      window.pin.renderPins(window.map.filteredData);
 
       // Add events listeners at all pins
       for (i = 0; i < window.pin.pinsList.length; i++) {
-        window.pin.pinsList[i].addEventListener('click', function (event) {
-          openPinDialog(event, pinFilteredArray);
-        });
-        window.pin.pinsList[i].addEventListener('keydown', function (event) {
-          if (event.keyCode === KEY_CODES.enter) {
-            openPinDialog(event, pinFilteredArray);
-          }
-        });
+        window.pin.pinsList[i].addEventListener('click', openPinDialog);
+        window.pin.pinsList[i].addEventListener('keydown', openPinDialog);
       }
     }
   };
