@@ -24,20 +24,36 @@
 
   window.backend.load(onSuccessLoad, window.backend.onError);
 
+  var dialog = document.querySelector('#offer-dialog');
+  var closeDialog = dialog.querySelector('.dialog__close');
+
+  var closePinDialog = function (event) {
+    if (dialog.classList.contains('hidden')) {
+      return;
+    }
+    if (event.type === 'click' || (event.type === 'keydown' && event.keyCode === KEY_CODES.escape)) {
+      window.pin.deactivate();
+      window.card.close();
+    }
+  };
+
+  var closePinDialogEventListenersHandler = function () {
+    closeDialog.addEventListener('click', closePinDialog);
+    closeDialog.addEventListener('keydown', closePinDialog);
+    document.addEventListener('keydown', closePinDialog);
+  };
+
+  closePinDialogEventListenersHandler();
+
   var openPinDialog = function (event) {
     if (event.type === 'keydown' && event.keyCode !== KEY_CODES.enter) {
       return;
     }
 
-    window.pin.activatePin(event.currentTarget);
-    window.card.openDialog(window.map.filteredData[window.pin.activePinIndex]);
-  };
+    window.pin.activate(event.currentTarget);
+    window.card.open(window.map.filteredData[window.pin.activePinIndex]);
 
-  var closeDialog = document.querySelector('.dialog__close');
-
-  var closePinDialog = function () {
-    window.pin.deactivateAllPins();
-    window.card.closeDialog();
+    closePinDialogEventListenersHandler();
   };
 
   var removeAllPinsAndListeners = function (pinList) {
@@ -49,7 +65,13 @@
       pinList[i].removeEventListener('keydown', openPinDialog);
     }
 
-    window.pin.removeAllPins();
+    if (dialog.classList.contains('hidden')) {
+      closeDialog.removeEventListener('click', closePinDialog);
+      closeDialog.removeEventListener('keydown', closePinDialog);
+      document.removeEventListener('keydown', closePinDialog);
+    }
+
+    window.pin.remove();
   };
 
   window.map = {
@@ -57,7 +79,7 @@
       window.map.filteredData = window.filter.filterData(pins);
 
       removeAllPinsAndListeners(window.pin.pinsList);
-      window.pin.renderPins(window.map.filteredData);
+      window.pin.render(window.map.filteredData);
 
       // Add events listeners at all pins
       for (i = 0; i < window.pin.pinsList.length; i++) {
@@ -66,22 +88,6 @@
       }
     }
   };
-
-  closeDialog.addEventListener('click', function () {
-    closePinDialog();
-  });
-
-  closeDialog.addEventListener('keydown', function (event) {
-    if (event.keyCode === KEY_CODES.enter) {
-      closePinDialog();
-    }
-  });
-
-  document.addEventListener('keydown', function (event) {
-    if (event.keyCode === KEY_CODES.escape) {
-      closePinDialog();
-    }
-  });
 
   var map = document.querySelector('.tokyo');
   var mapSize = {

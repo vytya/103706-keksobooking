@@ -53,7 +53,7 @@
   };
 
   window.card = {
-    openDialog: function (data) {
+    open: function (data) {
       if (dialogPanelParent.classList.contains('hidden')) {
         dialogPanelParent.classList.remove('hidden');
       }
@@ -61,7 +61,7 @@
       dialogPanelParent.appendChild(renderDialogData(data));
     },
 
-    closeDialog: function () {
+    close: function () {
       dialogPanelParent.classList.add('hidden');
     }
   };
