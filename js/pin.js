@@ -48,6 +48,14 @@
       for (i = 0; i < window.pin.pinsList.length; i++) {
         window.pin.pinsList[i].classList.remove('pin--active');
       }
+    },
+
+    removeAllPins: function () {
+      var activePinsList = document.querySelectorAll('.pin:not(.pin__main)');
+
+      for (i = 0; i < activePinsList.length; i++) {
+        activePinsList[i].parentNode.removeChild(activePinsList[i]);
+      }
     }
   };
 }());

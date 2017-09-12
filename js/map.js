@@ -15,34 +15,56 @@
 
   var i;
 
-  var openPinDialog = function (event, data) {
-    window.pin.activatePin(event.currentTarget);
-    window.card.openDialog(data[window.pin.activePinIndex]);
-  };
+  var pins = [];
 
   var onSuccessLoad = function (data) {
-    window.pin.renderPins(data);
-
-    // Add events listeners at all pins
-    for (i = 0; i < window.pin.pinsList.length; i++) {
-      window.pin.pinsList[i].addEventListener('click', function (event) {
-        openPinDialog(event, data);
-      });
-      window.pin.pinsList[i].addEventListener('keydown', function (event) {
-        if (event.keyCode === KEY_CODES.enter) {
-          openPinDialog(event, data);
-        }
-      });
-    }
+    pins = data;
+    window.map.updatePins();
   };
 
   window.backend.load(onSuccessLoad, window.backend.onError);
+
+  var openPinDialog = function (event) {
+    if (event.type === 'keydown' && event.keyCode !== KEY_CODES.enter) {
+      return;
+    }
+
+    window.pin.activatePin(event.currentTarget);
+    window.card.openDialog(window.map.filteredData[window.pin.activePinIndex]);
+  };
 
   var closeDialog = document.querySelector('.dialog__close');
 
   var closePinDialog = function () {
     window.pin.deactivateAllPins();
     window.card.closeDialog();
+  };
+
+  var removeAllPinsAndListeners = function (pinList) {
+    if (!pinList) {
+      return;
+    }
+    for (i = 0; i < pinList.length; i++) {
+      pinList[i].removeEventListener('click', openPinDialog);
+      pinList[i].removeEventListener('keydown', openPinDialog);
+    }
+
+    window.pin.removeAllPins();
+  };
+
+  window.map = {
+    updatePins: function () {
+      window.map.filteredData = window.filter.filterData(pins);
+
+      removeAllPinsAndListeners(window.pin.pinsList);
+      window.pin.renderPins(window.map.filteredData);
+
+      // Add events listeners at all pins
+      for (i = 0; i < window.pin.pinsList.length; i++) {
+        window.pin.pinsList[i].addEventListener('click', openPinDialog);
+        window.pin.pinsList[i].addEventListener('keydown', openPinDialog);
+      }
+    }
   };
 
   closeDialog.addEventListener('click', function () {
