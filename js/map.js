@@ -37,9 +37,13 @@
     }
   };
 
-  closeDialog.addEventListener('click', closePinDialog);
-  closeDialog.addEventListener('keydown', closePinDialog);
-  document.addEventListener('keydown', closePinDialog);
+  var closePinDialogEventListenersHandler = function () {
+    closeDialog.addEventListener('click', closePinDialog);
+    closeDialog.addEventListener('keydown', closePinDialog);
+    document.addEventListener('keydown', closePinDialog);
+  };
+
+  closePinDialogEventListenersHandler();
 
   var openPinDialog = function (event) {
     if (event.type === 'keydown' && event.keyCode !== KEY_CODES.enter) {
@@ -49,9 +53,7 @@
     window.pin.activate(event.currentTarget);
     window.card.open(window.map.filteredData[window.pin.activePinIndex]);
 
-    closeDialog.addEventListener('click', closePinDialog);
-    closeDialog.addEventListener('keydown', closePinDialog);
-    document.addEventListener('keydown', closePinDialog);
+    closePinDialogEventListenersHandler();
   };
 
   var removeAllPinsAndListeners = function (pinList) {
@@ -63,9 +65,11 @@
       pinList[i].removeEventListener('keydown', openPinDialog);
     }
 
-    closeDialog.removeEventListener('click', closePinDialog);
-    closeDialog.removeEventListener('keydown', closePinDialog);
-    document.removeEventListener('keydown', closePinDialog);
+    if (dialog.classList.contains('hidden')) {
+      closeDialog.removeEventListener('click', closePinDialog);
+      closeDialog.removeEventListener('keydown', closePinDialog);
+      document.removeEventListener('keydown', closePinDialog);
+    }
 
     window.pin.remove();
   };
