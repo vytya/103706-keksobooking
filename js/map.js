@@ -24,6 +24,15 @@
 
   window.backend.load(onSuccessLoad, window.backend.onError);
 
+  var closeDialog = document.querySelector('.dialog__close');
+
+  var closePinDialog = function (event) {
+    if (event.type === 'click' || (event.type === 'keydown' && event.keyCode === KEY_CODES.escape)) {
+      window.pin.deactivateAllPins();
+      window.card.closeDialog();
+    }
+  };
+
   var openPinDialog = function (event) {
     if (event.type === 'keydown' && event.keyCode !== KEY_CODES.enter) {
       return;
@@ -31,13 +40,10 @@
 
     window.pin.activatePin(event.currentTarget);
     window.card.openDialog(window.map.filteredData[window.pin.activePinIndex]);
-  };
 
-  var closeDialog = document.querySelector('.dialog__close');
-
-  var closePinDialog = function () {
-    window.pin.deactivateAllPins();
-    window.card.closeDialog();
+    closeDialog.addEventListener('click', closePinDialog);
+    closeDialog.addEventListener('keydown', closePinDialog);
+    document.addEventListener('keydown', closePinDialog);
   };
 
   var removeAllPinsAndListeners = function (pinList) {
@@ -48,6 +54,10 @@
       pinList[i].removeEventListener('click', openPinDialog);
       pinList[i].removeEventListener('keydown', openPinDialog);
     }
+
+    closeDialog.removeEventListener('click', closePinDialog);
+    closeDialog.removeEventListener('keydown', closePinDialog);
+    document.removeEventListener('keydown', closePinDialog);
 
     window.pin.removeAllPins();
   };
@@ -66,22 +76,6 @@
       }
     }
   };
-
-  closeDialog.addEventListener('click', function () {
-    closePinDialog();
-  });
-
-  closeDialog.addEventListener('keydown', function (event) {
-    if (event.keyCode === KEY_CODES.enter) {
-      closePinDialog();
-    }
-  });
-
-  document.addEventListener('keydown', function (event) {
-    if (event.keyCode === KEY_CODES.escape) {
-      closePinDialog();
-    }
-  });
 
   var map = document.querySelector('.tokyo');
   var mapSize = {
