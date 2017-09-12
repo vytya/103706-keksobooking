@@ -23,7 +23,7 @@
   };
 
   window.pin = {
-    renderPins: function (data) {
+    render: function (data) {
       for (i = 0; i < data.length; i++) {
         fragment.appendChild(renderPin(data[i]));
       }
@@ -33,7 +33,7 @@
       window.pin.pinsList = document.querySelectorAll('.pin:not(.pin__main)');
     },
 
-    activatePin: function (pin) {
+    activate: function (pin) {
       for (i = 0; i < window.pin.pinsList.length; i++) {
         if (pin === window.pin.pinsList[i]) {
           window.pin.activePinIndex = i;
@@ -44,13 +44,13 @@
       }
     },
 
-    deactivateAllPins: function () {
+    deactivate: function () {
       for (i = 0; i < window.pin.pinsList.length; i++) {
         window.pin.pinsList[i].classList.remove('pin--active');
       }
     },
 
-    removeAllPins: function () {
+    remove: function () {
       var activePinsList = document.querySelectorAll('.pin:not(.pin__main)');
 
       for (i = 0; i < activePinsList.length; i++) {

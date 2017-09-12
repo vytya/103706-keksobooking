@@ -24,22 +24,30 @@
 
   window.backend.load(onSuccessLoad, window.backend.onError);
 
-  var closeDialog = document.querySelector('.dialog__close');
+  var dialog = document.querySelector('#offer-dialog');
+  var closeDialog = dialog.querySelector('.dialog__close');
 
   var closePinDialog = function (event) {
+    if (dialog.classList.contains('hidden')) {
+      return;
+    }
     if (event.type === 'click' || (event.type === 'keydown' && event.keyCode === KEY_CODES.escape)) {
-      window.pin.deactivateAllPins();
-      window.card.closeDialog();
+      window.pin.deactivate();
+      window.card.close();
     }
   };
+
+  closeDialog.addEventListener('click', closePinDialog);
+  closeDialog.addEventListener('keydown', closePinDialog);
+  document.addEventListener('keydown', closePinDialog);
 
   var openPinDialog = function (event) {
     if (event.type === 'keydown' && event.keyCode !== KEY_CODES.enter) {
       return;
     }
 
-    window.pin.activatePin(event.currentTarget);
-    window.card.openDialog(window.map.filteredData[window.pin.activePinIndex]);
+    window.pin.activate(event.currentTarget);
+    window.card.open(window.map.filteredData[window.pin.activePinIndex]);
 
     closeDialog.addEventListener('click', closePinDialog);
     closeDialog.addEventListener('keydown', closePinDialog);
@@ -59,7 +67,7 @@
     closeDialog.removeEventListener('keydown', closePinDialog);
     document.removeEventListener('keydown', closePinDialog);
 
-    window.pin.removeAllPins();
+    window.pin.remove();
   };
 
   window.map = {
@@ -67,7 +75,7 @@
       window.map.filteredData = window.filter.filterData(pins);
 
       removeAllPinsAndListeners(window.pin.pinsList);
-      window.pin.renderPins(window.map.filteredData);
+      window.pin.render(window.map.filteredData);
 
       // Add events listeners at all pins
       for (i = 0; i < window.pin.pinsList.length; i++) {
