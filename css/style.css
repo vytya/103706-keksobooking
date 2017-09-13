@@ -192,7 +192,8 @@ select option:hover {
     height:100%;
 }
 
-.upload:hover {
+.upload:hover,
+.upload.dragover {
     border-color: #ff6547;
     color: #ff6547;
 }
