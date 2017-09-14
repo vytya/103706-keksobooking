@@ -69,7 +69,40 @@
   window.synchronizeFields(timeOutSelect, timeInSelect, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], syncValues);
 
   window.synchronizeFields(roomNumberSelect, capacitySelect, ['1', '2', '3', '100'], ['1', '2', '3', '0'], syncValues);
-  window.synchronizeFields(capacitySelect, roomNumberSelect, ['1', '2', '3', '0'], ['1', '2', '3', '100'], syncValues);
+
+  var syncRoomsWithCapacity = function (slave, value) {
+    var slaveIndex;
+    var needToChangeIndex = true;
+
+    switch (value) {
+      case '1':
+        if (slave[0].selected || slave[1].selected || slave[2].selected) {
+          needToChangeIndex = false;
+        } else {
+          slaveIndex = 0;
+        }
+        break;
+      case '2':
+        if (slave[1].selected || slave[2].selected) {
+          needToChangeIndex = false;
+        } else {
+          slaveIndex = 1;
+        }
+        break;
+      case '3':
+        slaveIndex = 2;
+        break;
+      case '100':
+        slaveIndex = 3;
+        break;
+    }
+
+    if (needToChangeIndex) {
+      slave[slaveIndex].selected = true;
+    }
+  };
+
+  window.synchronizeFields(capacitySelect, roomNumberSelect, ['1', '2', '3', '0'], ['1', '2', '3', '100'], syncRoomsWithCapacity);
 
   var syncValueWithMin = function (element, value) {
     element.min = value;
