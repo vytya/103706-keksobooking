@@ -19,7 +19,6 @@
 
   var onSuccessLoad = function (data) {
     pins = data;
-    window.map.updatePins();
   };
 
   window.backend.load(onSuccessLoad, window.backend.onError);
@@ -74,12 +73,25 @@
     window.pin.remove();
   };
 
+  var firstLoad = true;
+
   window.map = {
     updatePins: function () {
-      window.map.filteredData = window.filter.filterData(pins);
+      var pinsData = pins;
+
+      window.map.filteredData = window.filter.filterData(pinsData);
+
+      if (firstLoad) {
+        var randomPins = pins.slice().sort(function () {
+          return Math.random() - 0.5;
+        }).splice(0, 3);
+
+        pinsData = randomPins;
+        firstLoad = false;
+      }
 
       removeAllPinsAndListeners(window.pin.pinsList);
-      window.pin.render(window.map.filteredData);
+      window.pin.render(window.filter.filterData(pinsData));
 
       // Add events listeners at all pins
       for (i = 0; i < window.pin.pinsList.length; i++) {
