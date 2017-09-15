@@ -2,13 +2,29 @@
 
 (function () {
   var SERVER_URL = 'https://1510.dump.academy/keksobooking';
+  var SUCCESS_CODE = 200;
+  var TIMEOUT = 10000;
+  var ERROR_STYLES = {
+    width: 50 + '%',
+    height: 100 + 'px',
+    bgColor: 'red',
+    position: 'fixed',
+    zIndex: 10,
+    top: 50 + '%',
+    left: 50 + '%',
+    transform: 'translate(-50%, -50%)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'white'
+  };
 
   var setup = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === SUCCESS_CODE) {
         onSuccess(xhr.response);
       } else {
         onError('Ошибка: ' + xhr.status + ' ' + xhr.statusText);
@@ -21,7 +37,7 @@
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
-    xhr.timeout = 10000; // 10s
+    xhr.timeout = TIMEOUT;
 
     return xhr;
   };
@@ -44,18 +60,18 @@
     onError: function (message) {
       var node = document.createElement('div');
 
-      node.style.width = 50 + '%';
-      node.style.height = 100 + 'px';
-      node.style.backgroundColor = 'red';
-      node.style.position = 'fixed';
-      node.style.zIndex = 10;
-      node.style.top = 50 + '%';
-      node.style.left = 50 + '%';
-      node.style.transform = 'translate(-50%, -50%)';
-      node.style.display = 'flex';
-      node.style.alignItems = 'center';
-      node.style.justifyContent = 'center';
-      node.style.color = 'white';
+      node.style.width = ERROR_STYLES.width;
+      node.style.height = ERROR_STYLES.height;
+      node.style.backgroundColor = ERROR_STYLES.bgColor;
+      node.style.position = ERROR_STYLES.position;
+      node.style.zIndex = ERROR_STYLES.zIndex;
+      node.style.top = ERROR_STYLES.top;
+      node.style.left = ERROR_STYLES.left;
+      node.style.transform = ERROR_STYLES.transform;
+      node.style.display = ERROR_STYLES.display;
+      node.style.alignItems = ERROR_STYLES.alignItems;
+      node.style.justifyContent = ERROR_STYLES.justifyContent;
+      node.style.color = ERROR_STYLES.color;
 
       node.textContent = message;
 

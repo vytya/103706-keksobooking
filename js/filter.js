@@ -1,9 +1,12 @@
 'use strict';
 
 (function () {
-  var filtersElements = document.querySelector('.tokyo__filters');
-  var selectElements = filtersElements.querySelectorAll('select');
-  var checkboxElements = filtersElements.querySelectorAll('input[type="checkbox"]');
+  var PRICE_FROM = 10000;
+  var PRICE_TO = 50000;
+
+  var filterElements = document.querySelector('.tokyo__filters');
+  var selectElements = [].slice.call(filterElements.querySelectorAll('select'));
+  var checkboxElements = [].slice.call(filterElements.querySelectorAll('input[type="checkbox"]'));
   var activeFilters;
 
   var updateActiveFilters = function () {
@@ -11,83 +14,81 @@
     window.debounce(window.map.updatePins);
   };
 
+  var checkRadioButtonValue = function (element, value) {
+    return element.some(function (it) {
+      return it === value;
+    });
+  };
+
+  var checkSelectValue = function (element, value) {
+    return element === value;
+  };
+
   window.filter = {
     filterData: function (pins) {
-      var pinFilteredArray = pins.filter(function (it) {
+      var filteredPins = pins.filter(function (it) {
         var ok = true;
 
         if (activeFilters[0] !== 'any') {
-          ok = it.offer.type === activeFilters[0];
+          ok = checkSelectValue(it.offer.type, activeFilters[0]);
         }
 
         if (ok && activeFilters[1] !== 'any') {
           switch (activeFilters[1]) {
             case 'middle':
-              ok = it.offer.price >= 10000 && it.offer.price <= 50000;
+              ok = it.offer.price >= PRICE_FROM && it.offer.price <= PRICE_TO;
               break;
 
             case 'low':
-              ok = it.offer.price < 10000;
+              ok = it.offer.price < PRICE_FROM;
               break;
 
             case 'high':
-              ok = it.offer.price > 50000;
+              ok = it.offer.price > PRICE_TO;
               break;
           }
         }
 
         if (ok && activeFilters[2] !== 'any') {
-          ok = it.offer.rooms === +activeFilters[2];
+          ok = checkSelectValue(it.offer.rooms, activeFilters[2]);
         }
 
         if (ok && activeFilters[3] !== 'any') {
-          ok = it.offer.guests === +activeFilters[3];
+          ok = checkSelectValue(it.offer.guests, activeFilters[3]);
         }
 
         if (ok && activeFilters[4]) {
-          ok = it.offer.features.some(function (itIn) {
-            return itIn === 'wifi';
-          });
+          ok = checkRadioButtonValue(it.offer.features, 'wifi');
         }
 
         if (ok && activeFilters[5]) {
-          ok = it.offer.features.some(function (itIn) {
-            return itIn === 'dishwasher';
-          });
+          ok = checkRadioButtonValue(it.offer.features, 'dishwasher');
         }
 
         if (ok && activeFilters[6]) {
-          ok = it.offer.features.some(function (itIn) {
-            return itIn === 'parking';
-          });
+          ok = checkRadioButtonValue(it.offer.features, 'parking');
         }
 
         if (ok && activeFilters[7]) {
-          ok = it.offer.features.some(function (itIn) {
-            return itIn === 'washer';
-          });
+          ok = checkRadioButtonValue(it.offer.features, 'washer');
         }
 
         if (ok && activeFilters[8]) {
-          ok = it.offer.features.some(function (itIn) {
-            return itIn === 'elevator';
-          });
+          ok = checkRadioButtonValue(it.offer.features, 'elevator');
         }
 
         if (ok && activeFilters[9]) {
-          ok = it.offer.features.some(function (itIn) {
-            return itIn === 'conditioner';
-          });
+          ok = checkRadioButtonValue(it.offer.features, 'conditioner');
         }
 
         return ok;
       });
 
-      return pinFilteredArray;
+      return filteredPins;
     }
   };
 
-  var activeSelectValues = [].map.call(selectElements, function (it) {
+  var activeSelectValues = selectElements.map(function (it) {
     it.addEventListener('change', function (event) {
       changeSelectValue(event);
     });
@@ -95,7 +96,7 @@
     return it.value;
   });
 
-  var checkboxActiveValues = [].map.call(checkboxElements, function (it) {
+  var checkboxActiveValues = checkboxElements.map(function (it) {
     it.addEventListener('change', function (event) {
       changeCheckboxValue(event);
     });
@@ -104,14 +105,14 @@
   });
 
   var changeSelectValue = function (event) {
-    var changedSelectIndex = [].slice.call(selectElements).indexOf(event.target);
+    var changedSelectIndex = selectElements.indexOf(event.target);
     activeSelectValues[changedSelectIndex] = event.target.value;
 
     updateActiveFilters();
   };
 
   var changeCheckboxValue = function (event) {
-    var changedCheckboxIndex = [].slice.call(checkboxElements).indexOf(event.target);
+    var changedCheckboxIndex = checkboxElements.indexOf(event.target);
     checkboxActiveValues[changedCheckboxIndex] = event.target.checked;
 
     updateActiveFilters();

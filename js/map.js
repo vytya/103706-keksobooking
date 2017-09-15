@@ -11,6 +11,8 @@
     height: 94
   };
 
+  var FIRST_LOAD_PINS_NUMBER = 3;
+
   var ERROR_BOX_SHADOW = 'inset 0 0 0 2px red';
 
   var i;
@@ -36,13 +38,13 @@
     }
   };
 
-  var closePinDialogEventListenersHandler = function () {
+  var onClosePinDialogEventListeners = function () {
     closeDialog.addEventListener('click', closePinDialog);
     closeDialog.addEventListener('keydown', closePinDialog);
     document.addEventListener('keydown', closePinDialog);
   };
 
-  closePinDialogEventListenersHandler();
+  onClosePinDialogEventListeners();
 
   var openPinDialog = function (event) {
     if (event.type === 'keydown' && event.keyCode !== KEY_CODES.enter) {
@@ -52,7 +54,7 @@
     window.pin.activate(event.currentTarget);
     window.card.open(window.map.filteredData[window.pin.activePinIndex]);
 
-    closePinDialogEventListenersHandler();
+    onClosePinDialogEventListeners();
   };
 
   var removeAllPinsAndListeners = function (pinList) {
@@ -75,6 +77,10 @@
 
   var firstLoad = true;
 
+  var shuffleArray = function () {
+    return Math.random() - 0.5;
+  };
+
   window.map = {
     updatePins: function () {
       var pinsData = pins;
@@ -82,9 +88,7 @@
       window.map.filteredData = window.filter.filterData(pinsData);
 
       if (firstLoad) {
-        var randomPins = pins.slice().sort(function () {
-          return Math.random() - 0.5;
-        }).splice(0, 3);
+        var randomPins = pins.slice().sort(shuffleArray).splice(0, FIRST_LOAD_PINS_NUMBER);
 
         pinsData = randomPins;
         firstLoad = false;
